@@ -12,16 +12,20 @@ public class EstimatorState extends State{
 		super();
 		this.stateEstimate = stateEstimate;
 		this.name = generateStateName(stateEstimate);
-		this.nonsecret = isSecretRevealing(stateEstimate);
+		this.nonsecret = isSecretOpaque(stateEstimate);
 	}
 	
-	private boolean isSecretRevealing (ArrayList<State> stateEstimate)
+	public boolean isOpaque (){
+		return nonsecret;
+	}
+	
+	private boolean isSecretOpaque (ArrayList<State> stateEstimate)
 	{
 		for (int i = 0; i < stateEstimate.size(); i++) {
 			if ((stateEstimate.get(i)).isNonsecret())
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private String generateStateName(ArrayList<State> stateEstimate){

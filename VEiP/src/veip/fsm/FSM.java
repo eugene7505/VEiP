@@ -2,36 +2,49 @@ package veip.fsm;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
-
 
 public class FSM {
 
 	public class Event {
 		String name;
-		boolean observable = false;
-		boolean controllable = false;
+		private boolean observable = false;
+		private boolean controllable = false;
 
 		public Event(String eventName) {
 			name = eventName;
 		}
 
-		public Event(String eventName, boolean isObservable,
-				boolean isControllable) {
+		public Event(String eventName, boolean isControllable,
+				boolean isObservable) {
 			name = eventName;
-			observable = isObservable;
-			controllable = isControllable;
+			setObservable(isObservable);
+			setControllable(isControllable);
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public boolean isControllable() {
+			return controllable;
+		}
+
+		public void setControllable(boolean controllable) {
+			this.controllable = controllable;
+		}
+
+		public boolean isObservable() {
+			return observable;
+		}
+
+		public void setObservable(boolean observable) {
+			this.observable = observable;
 		}
 	}
-
-	
 
 	protected String file = new String("");
 	protected int numberOfStates = 0;
@@ -43,26 +56,28 @@ public class FSM {
 	protected HashMap<String, State> stateMap;
 	protected HashMap<String, Event> localEventMap;
 
-	static HashMap<String, Event> globalEventMap = new HashMap<String, Event>();
-	static HashMap<String, Event> globalObsEventMap = new HashMap<String, Event>();
-	
-	public FSM(){};
-	
+	public static HashMap<String, Event> globalEventMap = new HashMap<String, Event>();
+	public static HashMap<String, Event> globalObsEventMap = new HashMap<String, Event>();
+	public static HashMap<String, Event> globalUnobsEventMap = new HashMap<String, Event>();
+
+	public FSM() {
+	};
+
 	@SuppressWarnings("unchecked")
-	public FSM (FSM fsm){
+	public FSM(FSM fsm) {
 		numberOfStates = fsm.numberOfStates;
 		numberOfInitialState = fsm.numberOfInitialState;
-		initialStateList = (ArrayList<State>)fsm.initialStateList.clone();
-		stateMap = (HashMap<String, State>)fsm.stateMap.clone();
-		localEventMap = (HashMap<String, Event>)fsm.localEventMap.clone();		
-	} 
-	
+		initialStateList = (ArrayList<State>) fsm.initialStateList.clone();
+		stateMap = (HashMap<String, State>) fsm.stateMap.clone();
+		localEventMap = (HashMap<String, Event>) fsm.localEventMap.clone();
+	}
+
 	public FSM(String fileName) throws FileNotFoundException {
 		file = fileName;
 		initialStateList = new ArrayList<State>();
-		stateMap = new HashMap<String, State> ();
-		localEventMap = new HashMap<String, Event> ();
-		
+		stateMap = new HashMap<String, State>();
+		localEventMap = new HashMap<String, Event>();
+
 		Scanner s = new Scanner(new FileInputStream(fileName));
 		numberOfStates = s.nextInt();
 		numberOfInitialState = s.nextInt();
@@ -74,21 +89,25 @@ public class FSM {
 			for (int j = 0; j < state.numberOfTransitions; j++) {
 
 				String eventName = s.next();
-				Event event = addEvent(eventName);
 				String nextStateName = s.next();
 				State nextState = addState(nextStateName);
-				event.controllable = (s.next() == "c");
-				event.observable = (s.next() == "o");
+				String c = s.next();
+				String o = s.next();
+				Event event = addEvent(eventName,
+						(c.compareTo("c") == 0), (o
+								.compareTo("o") == 0));
+				addObsUnobsEventMap(event);
 				state.addTransition(event, nextState);
 			}
 			// currently, support single initial state
-			if (i < numberOfInitialState){
+			if (i < numberOfInitialState) {
 				state.initial = true;
-				initialStateList.add(state);				
+				initialStateList.add(state);
 			}
 		}
 		s.close();
 	}
+
 	/*
 	 * This function create and return a new state and add to stateList if no
 	 * state named stateName already exists If there is already a state with the
@@ -97,7 +116,7 @@ public class FSM {
 	public State addState(String stateName) {
 		if (!stateMap.containsKey(stateName))
 			stateMap.put(stateName, new State(stateName));
-		
+
 		State state = stateMap.get(stateName);
 		return state;
 	}
@@ -114,7 +133,7 @@ public class FSM {
 		Event event;
 		if (!globalEventMap.containsKey(eventName)) {
 			globalEventMap.put(eventName, new Event(eventName));
-			globalObsEventMap.put(eventName, new Event(eventName));
+			// globalObsEventMap.put(eventName, new Event(eventName));
 			event = globalEventMap.get(eventName);
 			localEventMap.put(eventName, event);
 		}
@@ -124,80 +143,126 @@ public class FSM {
 			if (!localEventMap.containsKey(eventName)) {
 				localEventMap.put(eventName, event);
 			}
+
 		}
 		return event;
 	}
 
-	public int getNumberOfStates(){
+	/*
+	 * TODO: can we throw an error when the con/obs attributes are inconsistent?
+	 */
+	public Event addEvent(String eventName, boolean controllable,
+			boolean observable) {
+		Event event;
+		if (!globalEventMap.containsKey(eventName)) {
+			globalEventMap.put(eventName, new Event(eventName, controllable,
+					observable));
+			event = globalEventMap.get(eventName);
+			localEventMap.put(eventName, event);
+		} else {
+			event = globalEventMap.get(eventName);
+			if (event.isControllable() != controllable
+					|| event.isObservable() != observable) {
+				System.out
+						.println("event "
+								+ event.getName()
+								+ " has inconsistent controllable/observable attributes. Overwrite the attributes to "
+							    + (controllable ? "c" : "uc")
+								+ "," + (observable ? "o" : "uo"));
+				event.setControllable(controllable);
+				event.setObservable(observable);
+			}
+			if (!localEventMap.containsKey(eventName)) {
+				localEventMap.put(eventName, event);
+			}
+
+		}
+		return event;
+
+	}
+
+	public void addObsUnobsEventMap(Event event) {
+		if (event.isObservable())
+			globalObsEventMap.put(event.name, event);
+		else
+			globalUnobsEventMap.put(event.name, event);
+	}
+
+	public int getNumberOfStates() {
 		return numberOfStates;
 	}
 
-	public int getNumberOfInitialState(){
+	public int getNumberOfInitialState() {
 		return numberOfInitialState;
 	}
-	public ArrayList<State> getInitialStateList(){
+
+	public ArrayList<State> getInitialStateList() {
 		return initialStateList;
 	}
-	public HashMap<String, State> getStateMap(){
+
+	public HashMap<String, State> getStateMap() {
 		return stateMap;
 	}
-	public HashMap<String, Event> getLocalEventMap(){
+
+	public HashMap<String, Event> getLocalEventMap() {
 		return localEventMap;
 	}
-	
-	/* This method prints the FSM 
-	 * Initial states are printed first. Then other states are printed by iterating over the map datastructure
+
+	/*
+	 * This method prints the FSM Initial states are printed first. Then other
+	 * states are printed by iterating over the map datastructure
 	 */
 	public void printFSM() {
-		System.out.println(numberOfStates + " " + numberOfInitialState);
+		System.out.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);
 			System.out.println();
-			System.out.println(state.name + " " + ((state.nonsecret) ? 1 : 0)
-					+ " " + state.numberOfTransitions);
+			System.out.println(state.name + "\t" + ((state.nonsecret) ? 1 : 0)
+					+ "\t" + state.numberOfTransitions);
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
 					.entrySet()) {
 				Event event = transitionEntry.getKey();
 				ArrayList<State> nextStateList = transitionEntry.getValue();
 				for (int j = 0; j < nextStateList.size(); j++) {
-					System.out.println(event.name + " "
-							+ nextStateList.get(j).name + " "
-							+ ((event.controllable) ? 1 : 0) + ""
-							+ ((event.observable) ? 1 : 0));
+					System.out.println(event.name + "\t"
+							+ nextStateList.get(j).name + "\t"
+							+ ((event.isControllable()) ? "c" : "uc") + "\t"
+							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}
 		}
-		for (Map.Entry<String, State> entry : stateMap.entrySet()){
+		for (Map.Entry<String, State> entry : stateMap.entrySet()) {
 			State state = entry.getValue();
 			if (state.initial)
 				continue;
 			else {
 				System.out.println();
-				System.out.println(state.name + " " + ((state.nonsecret) ? 1 : 0)
-						+ " " + state.numberOfTransitions);
+				System.out.println(state.name + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
 				for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
 						.entrySet()) {
 					Event event = transitionEntry.getKey();
 					ArrayList<State> nextStateList = transitionEntry.getValue();
 					for (int j = 0; j < nextStateList.size(); j++) {
-						System.out.println(event.name + " "
-								+ nextStateList.get(j).name + " "
-								+ ((event.controllable) ? 1 : 0) + ""
-								+ ((event.observable) ? 1 : 0));
+						System.out.println(event.name + "\t"
+								+ nextStateList.get(j).name + "\t"
+								+ ((event.isControllable()) ? "c" : "uc")
+								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
-				
+
 			}
-			
+
 		}
-		
+
 	}
-	
-//	public static void main(String[] args) throws FileNotFoundException{
-//		
-//		String file = "testFSM/G.fsm";
-//		FSM fsm = new FSM(file);
-//		fsm.printFSM();
-//	}
+
+	// public static void main(String[] args) throws FileNotFoundException{
+	//
+	// String file = "testFSM/G.fsm";
+	// FSM fsm = new FSM(file);
+	// fsm.printFSM();
+	// }
 
 }

@@ -14,7 +14,9 @@ public class State {
 	protected HashMap<Event, ArrayList<State>> transitions;
 	public boolean explored = false;
 
-	public State(){};
+	public State(){
+		transitions = new HashMap<Event, ArrayList<State>>();
+	};
 	public State(String stateName, boolean isNonsecret) {
 		name = stateName;
 		nonsecret = isNonsecret;
@@ -31,6 +33,7 @@ public class State {
 			transitions.put(event, new ArrayList<State>());
 		(transitions.get(event)).add(nextState);
 	}
+	
 
 	public boolean isNonsecret ()
 	{
@@ -40,16 +43,30 @@ public class State {
 	public boolean isInitial(){
 		return initial;
 	}
+	public void setInitial(boolean initial){
+		this.initial = initial;
+	}
 	
 	public int getNumberOfTransitions(){
 		return numberOfTransitions;
 	}
 	
-	public HashMap<Event, ArrayList<State>> getTransitions(){
+	public void updateNumberOfTransitions(){
+		numberOfTransitions = transitions.size();
+	}
+	
+	public HashMap<Event, ArrayList<State>> getAllTransitions(){
 		return transitions;
 	} 
 	
 	public String getName(){
 		return name;
 	}
+	public ArrayList<State> getNextStateList(Event event){
+		if ((transitions.containsKey(event)))
+			return transitions.get(event);
+		else return null;
+	}
+	
+	
 }
