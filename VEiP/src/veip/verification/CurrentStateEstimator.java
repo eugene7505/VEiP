@@ -2,7 +2,6 @@ package veip.verification;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +39,8 @@ public class CurrentStateEstimator {
 				.getInitialStateList());
 		initialEstimate = addEstimate(initialStateWithUnobservableReach);
 		initialEstimate.setInitial(true);
+		
 		// BFS to build the cse
-
 		Stack<EstimatorState> stack = new Stack<EstimatorState>();
 		stack.push(initialEstimate);
 		while (!stack.empty()) {
@@ -74,12 +73,14 @@ public class CurrentStateEstimator {
 		}
 	}
 
-	/*
-	 * check if already exists
-	 * TODO: before creating/comparing the estimate, sort the states in stateList
+	/* This function adds a new estimator state if the estimate does not already exists
+	 * The input is a list of states that the estimate contains and the output is an EstimateState instance
+	 * The input state list is sorted before we check if the corresponding estimate exists
+	 * @param stateList that contains the list of states we build the estimate from
+	 * @return EstimatorState 
 	 */
 	private EstimatorState addEstimate(ArrayList<State> stateList) {
-		
+		Collections.sort(stateList, new State.StateComparator());		
 		EstimatorState newEstimate = new EstimatorState(stateList);
 		String newEstimateName = newEstimate.getName();
 		if (estimatorStateMap.containsKey(newEstimateName)) {
@@ -93,9 +94,7 @@ public class CurrentStateEstimator {
 	}
 
 	/*
-	 * This function builds the unobservable reach from a given list of states
-	 * To guarantee that names are consistent, we sort the state list before
-	 * return
+	 * This function returns the unobservable reach from a given list of states
 	 * 
 	 * @return return the unobservable reach
 	 * 
@@ -133,7 +132,29 @@ public class CurrentStateEstimator {
 				list1.add(list2.get(i));
 		}
 	}
+	
+	public int getNumberOfStates(){
+		return numberOfStates;
+	}
+	
+	public EstimatorState getInitialEstimate(){
+		return initialEstimate;
+	}
+		
+	public HashMap<String, EstimatorState> getEstimatorStateMap(){
+		return estimatorStateMap;
+	}
+	
+	public HashMap<String, Event> getLocalEventMap(){
+		return localEventMap;
+	}
 
+	
+	
+
+	/* This function returns whether the fsm is current state opaque or not.
+	 * @return true if the fsm is opaque and false if the fsm is not opaque
+	 */
 	public boolean isCurrentStateOpaque(){
 		for (Map.Entry<String, EstimatorState> estimateEntry: estimatorStateMap.entrySet()){
 			if (!estimateEntry.getValue().isOpaque()) {
@@ -189,10 +210,17 @@ public class CurrentStateEstimator {
 		}
 	}
 
+	/* This function export the cse to the fsm format
+	 * TODO
+	 */
+	public void exportFSM(){
+		
+	}
+	
+	
 	public static void main(String args[]) throws FileNotFoundException {
 		String file = "testFSM/G2.fsm";
 		FSM fsm = new FSM(file);
-		// fsm.printFSM();
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
 				fsm);
 		currentStateEstimator.printEstimator();

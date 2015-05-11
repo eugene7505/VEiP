@@ -1,22 +1,18 @@
 package veip.fsm;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import veip.fsm.FSM.Event;
 
 public class State {
-	protected String name;
-	protected boolean nonsecret = true;
-	protected boolean initial = false;
-	protected int numberOfTransitions = 0;
-	protected HashMap<Event, ArrayList<State>> transitions;
-	public boolean explored = false;
-
+		
 	public State(){
 		transitions = new HashMap<Event, ArrayList<State>>();
 	};
+	
 	public State(String stateName, boolean isNonsecret) {
 		name = stateName;
 		nonsecret = isNonsecret;
@@ -27,6 +23,7 @@ public class State {
 		name = stateName;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
+	
 
 	public void addTransition(Event event, State nextState) {
 		if (!transitions.containsKey(event))
@@ -34,9 +31,11 @@ public class State {
 		(transitions.get(event)).add(nextState);
 	}
 	
-
-	public boolean isNonsecret ()
-	{
+	public void setTransitions(HashMap<Event, ArrayList<State>> newTransitions){
+		transitions = newTransitions;			
+	}
+	
+	public boolean isNonsecret (){
 		return nonsecret;
 	}
 
@@ -52,7 +51,9 @@ public class State {
 	}
 	
 	public void updateNumberOfTransitions(){
-		numberOfTransitions = transitions.size();
+		numberOfTransitions = 0;
+		for (Map.Entry<Event, ArrayList<State>> transitionEntry : transitions.entrySet())
+			numberOfTransitions += transitionEntry.getValue().size();
 	}
 	
 	public HashMap<Event, ArrayList<State>> getAllTransitions(){
@@ -68,5 +69,20 @@ public class State {
 		else return null;
 	}
 	
+	
+	public static class StateComparator implements Comparator<State>{
+		@Override
+		public int compare (State s1, State s2){
+			return (s1.getName().compareTo(s2.getName()));			
+		}
+	}
+	
+	
+	public boolean explored = false;
+	protected String name;
+	protected boolean nonsecret = true;
+	protected boolean initial = false;
+	protected int numberOfTransitions = 0;
+	protected HashMap<Event, ArrayList<State>> transitions;
 	
 }

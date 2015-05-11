@@ -7,13 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import veip.verification.CurrentStateEstimator;
+import veip.verification.EstimatorState;
+
 public class FSM {
 
-	public class Event {
+	public static class Event {
 		String name;
 		private boolean observable = false;
 		private boolean controllable = false;
-
+		private boolean inserted = false;
+		
 		public Event(String eventName) {
 			name = eventName;
 		}
@@ -24,7 +28,7 @@ public class FSM {
 			setObservable(isObservable);
 			setControllable(isControllable);
 		}
-
+		
 		public String getName() {
 			return name;
 		}
@@ -41,17 +45,22 @@ public class FSM {
 			return observable;
 		}
 
+		public boolean isInserted(){
+			return inserted;
+		}
+		
 		public void setObservable(boolean observable) {
 			this.observable = observable;
+		}
+		public void setInserted(boolean inserted) {
+			this.inserted = inserted;
 		}
 	}
 
 	protected String file = new String("");
-	protected int numberOfStates = 0;
-	protected int numberOfInitialState = 0;
+	protected int numberOfStates;
+	protected int numberOfInitialState;
 	protected ArrayList<State> initialStateList;
-	// private ArrayList<Event> eventList = new ArrayList<Event>();
-	// private ArrayList<Event> obsEventList = new ArrayList<Event>();
 
 	protected HashMap<String, State> stateMap;
 	protected HashMap<String, Event> localEventMap;
@@ -59,17 +68,41 @@ public class FSM {
 	public static HashMap<String, Event> globalEventMap = new HashMap<String, Event>();
 	public static HashMap<String, Event> globalObsEventMap = new HashMap<String, Event>();
 	public static HashMap<String, Event> globalUnobsEventMap = new HashMap<String, Event>();
-
+	
+	
 	public FSM() {
+		numberOfStates = 0;
+		numberOfInitialState = 0;
+		initialStateList = new ArrayList<State>();
+		stateMap = new HashMap<String, State>();
+		localEventMap = new HashMap<String, Event>();
 	};
 
 	@SuppressWarnings("unchecked")
 	public FSM(FSM fsm) {
 		numberOfStates = fsm.numberOfStates;
 		numberOfInitialState = fsm.numberOfInitialState;
-		initialStateList = (ArrayList<State>) fsm.initialStateList.clone();
-		stateMap = (HashMap<String, State>) fsm.stateMap.clone();
+
+		initialStateList = new ArrayList<State>(fsm.numberOfInitialState);
+		
+		//deep copy of the stateMap 
+		stateMap =  new HashMap<String, State> (fsm.getStateMap().size());
+		for (Map.Entry<String, State> stateEntry : fsm.getStateMap().entrySet()) {
+			State state = addState(stateEntry.getValue().getName());
+			for (Map.Entry<Event, ArrayList<State>> transitionEntry : stateEntry.getValue().getAllTransitions().entrySet()){
+				Event event = transitionEntry.getKey();
+				ArrayList<State> nextStates = transitionEntry.getValue();
+				for (int i = 0; i < nextStates.size(); i++){
+					State nextState = addState(nextStates.get(i).getName());
+					state.addTransition(event, nextState);
+				}
+			}
+			if (state.isInitial())
+				initialStateList.add(state);
+		}
+		//shallow copy of the localEventMap because event should have global attributes
 		localEventMap = (HashMap<String, Event>) fsm.localEventMap.clone();
+				
 	}
 
 	public FSM(String fileName) throws FileNotFoundException {
@@ -108,6 +141,39 @@ public class FSM {
 		s.close();
 	}
 
+	
+	/* This constructor builds an fsm from a current state estimator
+	 * @param currentStateEstimator the cse that the fsm is built from
+	 * @param renameWithNumbers whether names are renamed with numbers
+	 * @return corresponding fsm 
+	 * TODO: need to update globalEventMap?
+	 * TODO: perhaps we want a choice to concatenate state names or rename to numbers (perhaps using a function called rename states?)
+	 */
+	public FSM (CurrentStateEstimator currentStateEstimator){
+		System.out.println("building an fsm from the estimator");
+
+		numberOfStates = currentStateEstimator.getNumberOfStates();
+		numberOfInitialState = 1;
+		
+		initialStateList = new ArrayList<State>();
+		initialStateList.add((State)currentStateEstimator.getInitialEstimate());
+		
+		stateMap = new HashMap<String, State>();
+		for (Map.Entry<String, EstimatorState> stateEntry : currentStateEstimator.getEstimatorStateMap().entrySet()) {
+			String stateName = stateEntry.getKey();
+			State state = (State) stateEntry.getValue();
+			stateMap.put(stateName, state);
+		}
+		
+		localEventMap = new HashMap<String, Event>();
+		for (Map.Entry<String, Event> eventEntry : currentStateEstimator.getLocalEventMap().entrySet()) {
+			String eventName = eventEntry.getKey();
+			Event event = eventEntry.getValue();
+			localEventMap.put(eventName, event);
+		}
+	}
+	
+	
 	/*
 	 * This function create and return a new state and add to stateList if no
 	 * state named stateName already exists If there is already a state with the
@@ -143,7 +209,6 @@ public class FSM {
 			if (!localEventMap.containsKey(eventName)) {
 				localEventMap.put(eventName, event);
 			}
-
 		}
 		return event;
 	}
@@ -175,7 +240,6 @@ public class FSM {
 			if (!localEventMap.containsKey(eventName)) {
 				localEventMap.put(eventName, event);
 			}
-
 		}
 		return event;
 
@@ -188,6 +252,12 @@ public class FSM {
 			globalUnobsEventMap.put(event.name, event);
 	}
 
+	public void removeState (String stateName){
+		if (stateMap.containsKey(stateName)){
+			stateMap.remove(stateName);
+		}
+	}
+	
 	public int getNumberOfStates() {
 		return numberOfStates;
 	}
@@ -207,16 +277,27 @@ public class FSM {
 	public HashMap<String, Event> getLocalEventMap() {
 		return localEventMap;
 	}
-
+	
+	public void updateNumberOfStates(){
+		numberOfStates = stateMap.size();
+	}
+	
+	public void updateNumberOfInitialStates(){
+		numberOfInitialState = initialStateList.size();
+	}
+	
 	/*
 	 * This method prints the FSM Initial states are printed first. Then other
-	 * states are printed by iterating over the map datastructure
+	 * states are printed by iterating over the map data structure
 	 */
 	public void printFSM() {
+		updateNumberOfInitialStates();
+		updateNumberOfStates();
 		System.out.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);
 			System.out.println();
+			state.updateNumberOfTransitions();
 			System.out.println(state.name + "\t" + ((state.nonsecret) ? 1 : 0)
 					+ "\t" + state.numberOfTransitions);
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
@@ -233,6 +314,7 @@ public class FSM {
 		}
 		for (Map.Entry<String, State> entry : stateMap.entrySet()) {
 			State state = entry.getValue();
+			state.updateNumberOfTransitions();
 			if (state.initial)
 				continue;
 			else {
@@ -251,11 +333,8 @@ public class FSM {
 								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
-
 			}
-
 		}
-
 	}
 
 	// public static void main(String[] args) throws FileNotFoundException{
