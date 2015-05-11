@@ -88,12 +88,12 @@ public class FSM {
 		//deep copy of the stateMap 
 		stateMap =  new HashMap<String, State> (fsm.getStateMap().size());
 		for (Map.Entry<String, State> stateEntry : fsm.getStateMap().entrySet()) {
-			State state = addState(stateEntry.getValue().getName());
+			State state = addState(stateEntry.getValue().getName(), stateEntry.getValue().isInitial(), stateEntry.getValue().isNonsecret());
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : stateEntry.getValue().getAllTransitions().entrySet()){
 				Event event = transitionEntry.getKey();
 				ArrayList<State> nextStates = transitionEntry.getValue();
 				for (int i = 0; i < nextStates.size(); i++){
-					State nextState = addState(nextStates.get(i).getName());
+					State nextState = addState(nextStates.get(i).getName(), nextStates.get(i).isInitial(), nextStates.get(i).isNonsecret());
 					state.addTransition(event, nextState);
 				}
 			}
@@ -187,6 +187,14 @@ public class FSM {
 		return state;
 	}
 
+	public State addState(String stateName, boolean isInitial, boolean isNonsecret){
+		if (!stateMap.containsKey(stateName))
+			stateMap.put(stateName, new State(stateName, isInitial, isNonsecret));
+		State state = stateMap.get(stateName);
+		return state;
+		
+	}
+	
 	/*
 	 * First check if such an event exists in any of the automata if no, then
 	 * create a new event and add to both globalEventMap and localEventMap if

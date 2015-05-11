@@ -13,8 +13,9 @@ public class State {
 		transitions = new HashMap<Event, ArrayList<State>>();
 	};
 	
-	public State(String stateName, boolean isNonsecret) {
+	public State(String stateName, boolean isInitial, boolean isNonsecret) {
 		name = stateName;
+		initial = isInitial;
 		nonsecret = isNonsecret;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
@@ -23,7 +24,6 @@ public class State {
 		name = stateName;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
-	
 
 	public void addTransition(Event event, State nextState) {
 		if (!transitions.containsKey(event))
@@ -37,8 +37,8 @@ public class State {
 	
 	public boolean isNonsecret (){
 		return nonsecret;
-	}
-
+	}	
+	
 	public boolean isInitial(){
 		return initial;
 	}

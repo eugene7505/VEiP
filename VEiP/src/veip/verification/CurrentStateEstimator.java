@@ -1,11 +1,9 @@
 package veip.verification;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Stack;
 
 import veip.fsm.FSM;
@@ -209,16 +207,8 @@ public class CurrentStateEstimator {
 			}
 		}
 	}
-
-	/* This function export the cse to the fsm format
-	 * TODO
-	 */
-	public void exportFSM(){
-		
-	}
 	
-	
-	public static void main(String args[]) throws FileNotFoundException {
+	/*public static void main(String args[]) throws FileNotFoundException {
 		String file = "testFSM/G2.fsm";
 		FSM fsm = new FSM(file);
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
@@ -226,5 +216,5 @@ public class CurrentStateEstimator {
 		currentStateEstimator.printEstimator();
 		System.out.println("current state opaque? " + currentStateEstimator.isCurrentStateOpaque());
 		
-	}
+	}*/
 }
