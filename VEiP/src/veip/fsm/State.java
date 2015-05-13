@@ -69,7 +69,6 @@ public class State {
 		else return null;
 	}
 	
-	
 	public static class StateComparator implements Comparator<State>{
 		@Override
 		public int compare (State s1, State s2){

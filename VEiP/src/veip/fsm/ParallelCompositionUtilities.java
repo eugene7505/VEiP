@@ -26,6 +26,7 @@ public final class ParallelCompositionUtilities {
 	/*
 	 * This function computes the parallel composition for two automata, both
 	 * with one single initial state
+	 * TODO extend it to a list of initial states
 	 */
 	public static FSM pairwiseParallelComposition_singleInitialState(FSM fsm1,
 			FSM fsm2) {
@@ -51,10 +52,8 @@ public final class ParallelCompositionUtilities {
 
 		StatePair initialStatePair = new StatePair(initialState1, initialState2);
 		State initialState = compositeFSM.addState(
-				generateNameFromStatePair(initialStatePair),
-				isStatePairInitial(initialState1, initialState2),
+				generateNameFromStatePair(initialStatePair), true,
 				isStatePairNonsecret(initialState1, initialState2));
-		compositeFSM.initialStateList.add(initialState);
 		compositeFSM.updateNumberOfInitialStates();
 		statePairMap.put(initialStatePair, initialState);
 
@@ -112,10 +111,11 @@ public final class ParallelCompositionUtilities {
 	}
 
 	private static String generateNameFromStatePair(StatePair statePair) {
-		String name = new String("");
+		String name = new String("(");
 		name += statePair.first.getName();
 		name += ",";
 		name += statePair.second.getName();
+		name += ")";
 		return name;
 	}
 
@@ -153,23 +153,20 @@ public final class ParallelCompositionUtilities {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FSM fsm1 = new FSM("testFSM/G.fsm");
-		FSM fsm2 = new FSM("testFSM/G2.fsm");
+		FSM fsm1 = new FSM("testFSM/dailyBehavior/Estd.fsm");
+		FSM fsm2 = new FSM("testFSM/dailyBehavior/Estf.fsm");
 
-		System.out.println("print G1");
+		System.out.println("print Estd");
 		fsm1.printFSM();
 
 		System.out.println();
-		System.out.println("print G2");
+		System.out.println("print Estf");
 		fsm2.printFSM();
-		ArrayList<FSM> fsmArray = new ArrayList<FSM>();
-		fsmArray.add(fsm1);
-		fsmArray.add(fsm2);
 		FSM fsm12 = ParallelCompositionUtilities
 				.pairwiseParallelComposition_singleInitialState(fsm1, fsm2);
 
 		System.out.println();
-		System.out.println("print G1||G2");
+		System.out.println("print Estd||Estf");
 		fsm12.printFSM();
 
 	}
