@@ -64,7 +64,7 @@ public final class ParallelCompositionUtilities {
 		while (!statePairsStack.isEmpty()) {
 			StatePair statePair = statePairsStack.pop();
 			State state = statePairMap.get(statePair);
-			if (state.explored)
+			if (state.flagged)
 				continue;
 			for (Map.Entry<String, Event> eventEntry : compositeFSM.localEventMap
 					.entrySet()) {
@@ -103,7 +103,7 @@ public final class ParallelCompositionUtilities {
 						statePairsStack.push(nextStatePair);
 					}
 				}
-				state.explored = true;
+				state.flagged = true;
 			}
 		}
 		compositeFSM.updateNumberOfStates();

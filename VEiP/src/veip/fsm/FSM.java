@@ -102,6 +102,7 @@ public class FSM {
 					state.addTransition(event, nextState);
 				}
 			}
+			state.updateNumberOfTransitions();
 		}
 		// shallow copy of the localEventMap because event should have global
 		// attributes
@@ -354,6 +355,12 @@ public class FSM {
 		numberOfInitialState = initialStateList.size();
 	}
 
+	public void clearExplored(){
+		for (Map.Entry<String, State> stateEntry : stateMap.entrySet()) {
+			stateEntry.getValue().flagged = false;
+		}
+	}
+	
 	/*
 	 * This method prints the FSM Initial states are printed first. Then other
 	 * states are printed by iterating over the map data structure

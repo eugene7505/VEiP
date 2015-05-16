@@ -12,7 +12,6 @@ public final class GraphUtilities {
 	private GraphUtilities() {}
 	
 	public static HashMap<State, HashMap<State, Boolean>> dashedConnectivity(FSM fsm) {
-
 		// initialization entries to 0
 		HashMap<State, HashMap<State, Boolean>> dashedConnectivityMap = new HashMap<State, HashMap<State, Boolean>>();
 		HashMap<String, State> stateMap = fsm.getStateMap();
@@ -69,6 +68,65 @@ public final class GraphUtilities {
 		}
 		return dashedConnectivityMap;
 	}
+	
+	//TODO: Dijkstra algorithm?
+	public static HashMap<State, HashMap<State, String>> shortestDashedPath(FSM fsm) {
+		// initialization entries to 0
+		HashMap<State, HashMap<State, String>> shortestDashedPath = new HashMap<State, HashMap<State, String>>();
+		HashMap<String, State> stateMap = fsm.getStateMap();
+
+		for (HashMap.Entry<String, State> sourceStateEntry : stateMap
+				.entrySet()) {
+			State sourceState = sourceStateEntry.getValue();
+			HashMap<State, String> innerMap = new HashMap<State, String>();
+			shortestDashedPath.put(sourceState, innerMap);
+			for (HashMap.Entry<String, State> destinationStateEntry : stateMap
+					.entrySet()) {
+				State destinationState = destinationStateEntry.getValue();				
+				if (sourceStateEntry.getValue().equals(
+						destinationStateEntry.getValue())) {	
+					shortestDashedPath.get(sourceState).put(destinationState, new String(""));
+				} else {
+					shortestDashedPath.get(sourceState).put(destinationState, null);
+				}
+			}
+		}
+
+		// initialize 1-step dashed transition
+		for (HashMap.Entry<String, State> stateEntry : stateMap.entrySet()) {
+			State state = stateEntry.getValue();
+			for (HashMap.Entry<Event, ArrayList<State>> transitionEntry : state
+					.getAllTransitions().entrySet()) {
+				if (!transitionEntry.getKey().isInserted()) continue;
+				State nextState = transitionEntry.getValue().get(0);
+				(shortestDashedPath.get(state)).replace(nextState, new String(transitionEntry.getKey().getName()));
+			}
+		}
+
+		// Floyd Warshall
+		for (HashMap.Entry<String, State> intermediateStateEntry : stateMap
+				.entrySet()) {
+			for (HashMap.Entry<String, State> sourceStateEntry : stateMap
+					.entrySet()) {
+				for (HashMap.Entry<String, State> destinationStateEntry : stateMap
+						.entrySet()) {
+					State intermediatestate = intermediateStateEntry.getValue();
+					State sourceState = sourceStateEntry.getValue();
+					State destinationState = destinationStateEntry.getValue();
+					
+					
+					
+					String sourceToIntermediate = (shortestDashedPath.get(sourceState)).get(intermediatestate);
+					String intermediateToDestination = (shortestDashedPath.get(intermediatestate)).get(destinationState);
+					String sourceToDestination = (shortestDashedPath.get(sourceState)).get(destinationState);
+					
+				}
+			}
+		}
+		return shortestDashedPath;
+	}
+	
+	
 
 	public static void main(String args[]) throws FileNotFoundException {
 		FSM estimator = new FSM("testFSM/test0/obsG.fsm");

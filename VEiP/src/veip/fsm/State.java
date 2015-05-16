@@ -1,5 +1,11 @@
 package veip.fsm;
 
+/*TODO 
+ Potentially we want to make State as an inner class, and separate State and Transitions
+ (Separating State and Transitions may change the code structure greatly)
+ But this way, we can have DFA and NFA data structure 
+*/
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +23,7 @@ public class State {
 		name = stateName;
 		initial = isInitial;
 		nonsecret = isNonsecret;
+		marked = isNonsecret;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
 
@@ -39,11 +46,14 @@ public class State {
 		return nonsecret;
 	}	
 	
-	public boolean isInitial(){
+	public boolean isInitial (){
 		return initial;
 	}
-	public void setInitial(boolean initial){
+	public void setInitial (boolean initial){
 		this.initial = initial;
+	}
+	public boolean isMarked (){
+		return marked;
 	}
 	
 	public int getNumberOfTransitions(){
@@ -77,9 +87,10 @@ public class State {
 	}
 	
 	
-	public boolean explored = false;
+	public boolean flagged = false;
 	protected String name;
 	protected boolean nonsecret = true;
+	protected boolean marked = true;
 	protected boolean initial = false;
 	protected int numberOfTransitions = 0;
 	protected HashMap<Event, ArrayList<State>> transitions;

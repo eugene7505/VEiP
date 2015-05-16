@@ -14,7 +14,9 @@ import veip.fsm.FSM.Event;
 public class UnfoldedVerifier {
 	FSM verifier;
 	FSM estimator;
-	HashMap<State, HashMap<State, Boolean>> dashedConnectivity;
+	//(m1,m2) maps to their shortest dashed path if they are dashed connected; or null otherwise
+	HashMap<State, HashMap<State, String>> shortestDashedPath;   
+	HashMap<State, HashMap<State, Boolean>> dashedConnectivity;   
 	FSM unfoldedVerifier;
 	HashMap<State, YEventPair> ZtoYEventMap; //Zstate to YState and Event, all in UnfoldedVerifier
 	HashMap<State, State> YtoMStateMap; //Ystate in UnfoldedVerifier to MState in Verifier
@@ -25,6 +27,7 @@ public class UnfoldedVerifier {
 	public UnfoldedVerifier(Verifier verifier) {
 		this.verifier = verifier.getVerifierFSM();
 		this.estimator = verifier.getEstimatorFSM();
+		shortestDashedPath = GraphUtilities.shortestDashedPath(this.verifier);
 		dashedConnectivity = GraphUtilities.dashedConnectivity(this.verifier);
 		unfoldedVerifier = new FSM();
 		ZtoYEventMap = new HashMap<State, UnfoldedVerifier.YEventPair>();
@@ -54,14 +57,14 @@ public class UnfoldedVerifier {
 
 		while (!stateStack.isEmpty()) {
 			State state = stateStack.pop();
-			if (state.explored)
+			if (state.flagged)
 				continue;
 			else {
 				if (state.isNonsecret())
 					expandYState(state);
 				else
 					expandZState(state);
-				state.explored = true;
+				state.flagged = true;
 			}
 		}
 	}

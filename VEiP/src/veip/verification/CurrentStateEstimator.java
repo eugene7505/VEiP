@@ -43,7 +43,7 @@ public class CurrentStateEstimator {
 		stack.push(initialEstimate);
 		while (!stack.empty()) {
 			EstimatorState estimate = stack.pop();
-			if (estimate.explored)
+			if (estimate.flagged)
 				continue;
 			for (Map.Entry<String, Event> obsEventEntry : FSM.globalObsEventMap
 					.entrySet()) {
@@ -66,7 +66,7 @@ public class CurrentStateEstimator {
 					stack.push(nextEstimate);					
 				}
 			}
-			estimate.explored = true;
+			estimate.flagged = true;
 			estimate.updateNumberOfTransitions();
 		}
 	}
