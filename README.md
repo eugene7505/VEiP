@@ -28,6 +28,8 @@ $ java veip.synthesis.SynthesisMain ../testFSM/test2/G.fsm ../testFSM/test2/IA.f
 7) Outputs will appear in the directory from which the call was made.
 
 
+* The input/output file format of VEiP is slightly modified from the original .fsm format in order to allow the system to start from a set of initial states. Specifically, we add the number of initial states (say k) next to the number of total states in the first line of the file. The first k states in the file are the initial states. See testFSM/test2/G.fsm for example.
+
 
 
 
