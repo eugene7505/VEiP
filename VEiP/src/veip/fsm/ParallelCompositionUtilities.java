@@ -113,7 +113,7 @@ public final class ParallelCompositionUtilities {
 	private static String generateNameFromStatePair(StatePair statePair) {
 		String name = new String("(");
 		name += statePair.first.getName();
-		name += ",";
+		name += ";";
 		name += statePair.second.getName();
 		name += ")";
 		return name;

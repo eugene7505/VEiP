@@ -2,6 +2,7 @@ package veip.fsm;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -156,8 +157,6 @@ public class FSM {
 	 * (perhaps using a function called rename states?)
 	 */
 	public FSM(CurrentStateEstimator currentStateEstimator) {
-		System.out.println("building an fsm from the estimator");
-
 		numberOfStates = currentStateEstimator.getNumberOfStates();
 		numberOfInitialState = 1;
 
@@ -355,24 +354,24 @@ public class FSM {
 		numberOfInitialState = initialStateList.size();
 	}
 
-	public void clearExplored(){
+	public void clearFlags(){
 		for (Map.Entry<String, State> stateEntry : stateMap.entrySet()) {
 			stateEntry.getValue().flagged = false;
 		}
 	}
+	public boolean isEmptyFSM(){
+		return (stateMap.size() == 0);
+	}	
 	
 	/*
 	 * This method prints the FSM Initial states are printed first. Then other
 	 * states are printed by iterating over the map data structure
 	 */
 	public void printFSM() {
-		updateNumberOfInitialStates();
-		updateNumberOfStates();
 		System.out.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);
 			System.out.println();
-			state.updateNumberOfTransitions();
 			System.out.println(state.name + "\t" + ((state.nonsecret) ? 1 : 0)
 					+ "\t" + state.numberOfTransitions);
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
@@ -389,7 +388,6 @@ public class FSM {
 		}
 		for (Map.Entry<String, State> entry : stateMap.entrySet()) {
 			State state = entry.getValue();
-			state.updateNumberOfTransitions();
 			if (state.initial)
 				continue;
 			else {
@@ -412,6 +410,51 @@ public class FSM {
 		}
 	}
 
+	public void exportFSM(String outFileName) throws FileNotFoundException {
+		PrintWriter fileWriter = new PrintWriter(outFileName);
+		fileWriter.println(numberOfStates + "\t" + numberOfInitialState);
+		for (int i = 0; i < numberOfInitialState; i++) {
+			State state = initialStateList.get(i);
+			fileWriter.println();
+			fileWriter.println(state.name + "\t" + ((state.nonsecret) ? 1 : 0)
+					+ "\t" + state.numberOfTransitions);
+			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
+					.entrySet()) {
+				Event event = transitionEntry.getKey();
+				ArrayList<State> nextStateList = transitionEntry.getValue();
+				for (int j = 0; j < nextStateList.size(); j++) {
+					fileWriter.println(event.name + "\t"
+							+ nextStateList.get(j).name + "\t"
+							+ ((event.isControllable()) ? "c" : "uc") + "\t"
+							+ ((event.isObservable()) ? "o" : "uo"));
+				}
+			}
+		}
+		for (Map.Entry<String, State> entry : stateMap.entrySet()) {
+			State state = entry.getValue();
+			if (state.initial)
+				continue;
+			else {
+				fileWriter.println();
+				fileWriter.println(state.name + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
+				for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
+						.entrySet()) {
+					Event event = transitionEntry.getKey();
+					ArrayList<State> nextStateList = transitionEntry.getValue();
+					for (int j = 0; j < nextStateList.size(); j++) {
+						fileWriter.println(event.name + "\t"
+								+ nextStateList.get(j).name + "\t"
+								+ ((event.isControllable()) ? "c" : "uc")
+								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
+					}
+				}
+			}
+		}
+		fileWriter.close();
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String file = "testFSM/G.fsm";

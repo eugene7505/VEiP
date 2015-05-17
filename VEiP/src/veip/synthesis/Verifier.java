@@ -1,4 +1,4 @@
-package veip.enforcement;
+package veip.synthesis;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -119,22 +119,18 @@ public class Verifier {
 	}
 
 	public void printSafeEstimator() {
-		System.out.println("printing SafeEstimator in the verifier");
 		safeEstimator.printFSM();
 	}
 
 	public void printInsertionEstimator() {
-		System.out.println("printing InsertionEstimator in the verifier");
 		insertionEstimator.printFSM();
 	}
 
 	public void printEstimator() {
-		System.out.println("printing Estimator in the verifier");
 		estimator.printFSM();
 	}
 
 	public void printVerifier() {
-		System.out.println("printing verifier in the verifier");
 		verifier.printFSM();
 	}
 

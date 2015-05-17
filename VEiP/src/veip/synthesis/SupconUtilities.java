@@ -1,4 +1,4 @@
-package veip.enforcement;
+package veip.synthesis;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public final class SupconUtilities {
 
 	public static FSM stateBasedSupconNonblocking(FSM fsm) {
 		if (fsm.getNumberOfInitialState() != 1)
-			System.out.println("There are" + fsm.getNumberOfInitialState()
-					+ " > 1 initial states. WRONG!");
+			System.out.println("There are " + fsm.getNumberOfInitialState()
+					+ " != 1 initial states. WRONG!");
 		supconFSM = new FSM(fsm);
 		illegalStates = new HashSet<State>();
 		// initialize illegal states with all deadlocked states
@@ -41,7 +41,7 @@ public final class SupconUtilities {
 	// private static void recursivePruningIllegalStates() {}
 
 	private static void computeIllegalStates() {
-		supconFSM.clearExplored();
+		supconFSM.clearFlags();
 
 		// find the DFS traversal order
 		ArrayList<State> DFSArray = new ArrayList<State>();
@@ -94,9 +94,8 @@ public final class SupconUtilities {
 	}
 
 	private static FSM trimIllegalStates() {
-
 		FSM resultFSM = new FSM();
-		supconFSM.clearExplored();
+		supconFSM.clearFlags();
 		State supconInitial = supconFSM.getInitialStateList().get(0);
 		if (illegalStates.contains(supconInitial))
 			return resultFSM;
@@ -129,6 +128,8 @@ public final class SupconUtilities {
 				supconState.flagged = true;
 			}
 		}
+		resultFSM.updateNumberOfInitialStates();
+		resultFSM.updateNumberOfStates();
 		return resultFSM;
 	}
 

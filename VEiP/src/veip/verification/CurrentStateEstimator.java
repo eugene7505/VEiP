@@ -207,6 +207,9 @@ public class CurrentStateEstimator {
 			}
 		}
 	}
+	public boolean isInitialStateSafe(){
+		return initialEstimate.isNonsecret();
+	}
 	
 	/*public static void main(String args[]) throws FileNotFoundException {
 		String file = "testFSM/G2.fsm";
