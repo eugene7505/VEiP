@@ -1,0 +1,43 @@
+10	1
+
+start	1	2
+h	h8	c	o
+hi	h8	c	o
+
+h8	1	4
+h	h10	c	o
+hi	h10	c	o
+w	w10	c	o
+wi	w10	c	o
+
+t12	1	2
+w	w14	c	o
+wi	w14	c	o
+
+h10	1	2
+h	h12	c	o
+hi	h12	c	o
+
+w10	1	4
+t	t12	c	o
+ti	t12	c	o
+w	w12	c	o
+wi	w12	c	o
+
+h12	1	2
+h	h14	c	o
+hi	h14	c	o
+
+w12	1	2
+w	w14	c	o
+wi	w14	c	o
+
+h14	1	2
+h	h16	c	o
+hi	h16	c	o
+
+w14	1	2
+h	h16	c	o
+hi	h16	c	o
+
+h16	1	0

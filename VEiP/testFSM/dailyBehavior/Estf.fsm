@@ -1,0 +1,85 @@
+12	1
+
+start	1	4
+h	h8	c	o
+wi	w8	c	o
+pi	p8	c	o
+ti	h8	c	o
+
+h8	1	12
+h	h10	c	o
+wi	h10	c	o
+pi	h10	c	o
+ti	h10	c	o
+w	w10	c	o
+hi	w10	c	o
+pi	w10	c	o
+ti	w10	c	o
+p	p10	c	o
+wi	p10	c	o
+hi	p10	c	o
+ti	p10	c	o
+
+h10	1	4
+h	h12	c	o
+wi	h12	c	o
+pi	h12	c	o
+ti	h12	c	o
+
+h12	1	4
+h	h14	c	o
+wi	h14	c	o
+pi	h14	c	o
+ti	h14	c	o
+
+h14	1	4
+h	h16	c	o
+wi	h16	c	o
+pi	h16	c	o
+ti	h16	c	o
+
+h16	1	0
+
+w10	1	8
+w	w12	c	o
+hi	w12	c	o
+pi	w12	c	o
+ti	w12	c	o
+t	t12	c	o
+wi	t12	c	o
+pi	t12	c	o
+hi	t12	c	o
+
+w12	1	4
+w	w14	c	o
+hi	w14	c	o
+pi	w14	c	o
+ti	w14	c	o
+
+w14	1	4
+h	h16	c	o
+wi	h16	c	o
+pi	h16	c	o
+ti	h16	c	o
+
+p10	0	4
+p	p12	c	o
+wi	p12	c	o
+hi	p12	c	o
+ti	p12	c	o
+
+p12	0	8
+h	h14	c	o
+wi	h14	c	o
+pi	h14	c	o
+ti	h14	c	o
+w	w14	c	o
+hi	w14	c	o
+pi	w14	c	o
+ti	w14	c	o
+
+t12	1	4
+w	w14	c	o
+hi	w14	c	o
+pi	w14	c	o
+ti	w14	c	o

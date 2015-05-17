@@ -1,0 +1,272 @@
+61	1
+
+start,start	1	2
+h	h8,h8	c	o
+pi	start,p8	c	o
+
+t12,w14	1	2
+wi	w14,h16	c	o
+pi	t12,h16	c	o
+
+t12,w12	1	2
+pi	t12,w14	c	o
+w	w14,w14	c	o
+
+h8,h10	1	3
+h	h10,h12	c	o
+wi	w10,h12	c	o
+pi	h8,h12	c	o
+
+h12,t12	1	2
+pi	h12,w14	c	o
+hi	h14,w14	c	o
+
+h8,h14	1	3
+h	h10,h16	c	o
+wi	w10,h16	c	o
+pi	h8,h16	c	o
+
+h8,h12	1	3
+h	h10,h14	c	o
+wi	w10,h14	c	o
+pi	h8,h14	c	o
+
+h8,p10	0	3
+p	h8,p12	c	o
+wi	w10,p12	c	o
+hi	h10,p12	c	o
+
+h12,h16	1	0
+
+h8,h16	1	0
+
+h12,h14	1	2
+h	h14,h16	c	o
+pi	h12,h16	c	o
+
+h12,p12	0	4
+h	h14,h14	c	o
+pi	h12,h14	c	o
+pi	h12,w14	c	o
+hi	h14,w14	c	o
+
+h8,p12	0	6
+h	h10,h14	c	o
+wi	w10,h14	c	o
+pi	h8,h14	c	o
+pi	h8,w14	c	o
+w	w10,w14	c	o
+hi	h10,w14	c	o
+
+h8,t12	1	3
+pi	h8,w14	c	o
+w	w10,w14	c	o
+hi	h10,w14	c	o
+
+h12,h12	1	2
+h	h14,h14	c	o
+pi	h12,h14	c	o
+
+w14,w14	1	2
+h	h16,h16	c	o
+pi	w14,h16	c	o
+
+h14,w14	1	2
+h	h16,h16	c	o
+pi	h14,h16	c	o
+
+start,p8	1	0
+
+w14,h14	1	2
+h	h16,h16	c	o
+pi	w14,h16	c	o
+
+w14,h16	1	0
+
+h10,t12	1	2
+pi	h10,w14	c	o
+hi	h12,w14	c	o
+
+t12,h16	1	0
+
+t12,h14	1	2
+wi	w14,h16	c	o
+pi	t12,h16	c	o
+
+h10,p12	0	4
+h	h12,h14	c	o
+pi	h10,h14	c	o
+pi	h10,w14	c	o
+hi	h12,w14	c	o
+
+t12,h12	1	2
+wi	w14,h14	c	o
+pi	t12,h14	c	o
+
+h10,p10	0	2
+p	h10,p12	c	o
+hi	h12,p12	c	o
+
+h10,h16	1	0
+
+w12,t12	1	2
+pi	w12,w14	c	o
+w	w14,w14	c	o
+
+t12,t12	1	2
+pi	t12,w14	c	o
+w	w14,w14	c	o
+
+h10,h14	1	2
+h	h12,h16	c	o
+pi	h10,h16	c	o
+
+h10,h12	1	2
+h	h12,h14	c	o
+pi	h10,h14	c	o
+
+t12,p12	0	4
+wi	w14,h14	c	o
+pi	t12,h14	c	o
+pi	t12,w14	c	o
+w	w14,w14	c	o
+
+h10,h10	1	2
+h	h12,h12	c	o
+pi	h10,h12	c	o
+
+w12,h16	1	0
+
+w12,p12	0	4
+wi	w14,h14	c	o
+pi	w12,h14	c	o
+pi	w12,w14	c	o
+w	w14,w14	c	o
+
+h12,w14	1	2
+h	h14,h16	c	o
+pi	h12,h16	c	o
+
+w12,h12	1	2
+wi	w14,h14	c	o
+pi	w12,h14	c	o
+
+w12,h14	1	2
+wi	w14,h16	c	o
+pi	w12,h16	c	o
+
+h12,w12	1	2
+pi	h12,w14	c	o
+hi	h14,w14	c	o
+
+h8,w10	1	6
+wi	w10,t12	c	o
+pi	h8,w12	c	o
+pi	h8,t12	c	o
+w	w10,w12	c	o
+hi	h10,w12	c	o
+hi	h10,t12	c	o
+
+w10,w14	1	3
+wi	w12,h16	c	o
+pi	w10,h16	c	o
+ti	t12,h16	c	o
+
+h16,h16	1	0
+
+h8,w14	1	3
+h	h10,h16	c	o
+wi	w10,h16	c	o
+pi	h8,h16	c	o
+
+w10,w10	1	6
+t	t12,t12	c	o
+wi	w12,t12	c	o
+pi	w10,w12	c	o
+pi	w10,t12	c	o
+w	w12,w12	c	o
+ti	t12,w12	c	o
+
+h8,w12	1	3
+pi	h8,w14	c	o
+w	w10,w14	c	o
+hi	h10,w14	c	o
+
+w10,w12	1	3
+pi	w10,w14	c	o
+w	w12,w14	c	o
+ti	t12,w14	c	o
+
+w10,t12	1	3
+pi	w10,w14	c	o
+w	w12,w14	c	o
+ti	t12,w14	c	o
+
+w10,p10	0	3
+p	w10,p12	c	o
+wi	w12,p12	c	o
+ti	t12,p12	c	o
+
+w10,p12	0	6
+wi	w12,h14	c	o
+pi	w10,h14	c	o
+pi	w10,w14	c	o
+w	w12,w14	c	o
+ti	t12,h14	c	o
+ti	t12,w14	c	o
+
+w10,h14	1	3
+wi	w12,h16	c	o
+pi	w10,h16	c	o
+ti	t12,h16	c	o
+
+h10,w14	1	2
+h	h12,h16	c	o
+pi	h10,h16	c	o
+
+w10,h16	1	0
+
+h10,w12	1	2
+pi	h10,w14	c	o
+hi	h12,w14	c	o
+
+w10,h10	1	3
+wi	w12,h12	c	o
+pi	w10,h12	c	o
+ti	t12,h12	c	o
+
+h10,w10	1	4
+pi	h10,w12	c	o
+pi	h10,t12	c	o
+hi	h12,w12	c	o
+hi	h12,t12	c	o
+
+w10,h12	1	3
+wi	w12,h14	c	o
+pi	w10,h14	c	o
+ti	t12,h14	c	o
+
+h14,h16	1	0
+
+h14,h14	1	2
+h	h16,h16	c	o
+pi	h14,h16	c	o
+
+w12,w12	1	2
+pi	w12,w14	c	o
+w	w14,w14	c	o
+
+h8,h8	1	9
+h	h10,h10	c	o
+p	h8,p10	c	o
+wi	w10,h10	c	o
+wi	w10,p10	c	o
+pi	h8,h10	c	o
+pi	h8,w10	c	o
+w	w10,w10	c	o
+hi	h10,w10	c	o
+hi	h10,p10	c	o
+
+w12,w14	1	2
+wi	w14,h16	c	o
+pi	w12,h16	c	o
