@@ -162,6 +162,14 @@ public class CurrentStateEstimator {
 		return true;
 	}
 	
+	public void printUnsafeStates(){
+		for (Map.Entry<String, EstimatorState> estimateEntry: estimatorStateMap.entrySet()){
+			if (!estimateEntry.getValue().isOpaque()) {
+				System.out.print("{"+ estimateEntry.getKey() + "} ");;
+			}
+		}
+	}
+	
 	public void printEstimator() {
 		System.out.println(numberOfStates + "\t" + "1"); // #initial = 1
 		System.out.println();
@@ -210,14 +218,4 @@ public class CurrentStateEstimator {
 	public boolean isInitialStateSafe(){
 		return initialEstimate.isNonsecret();
 	}
-	
-	/*public static void main(String args[]) throws FileNotFoundException {
-		String file = "testFSM/G2.fsm";
-		FSM fsm = new FSM(file);
-		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
-				fsm);
-		currentStateEstimator.printEstimator();
-		System.out.println("current state opaque? " + currentStateEstimator.isCurrentStateOpaque());
-		
-	}*/
 }
