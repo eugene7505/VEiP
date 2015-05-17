@@ -19,11 +19,11 @@ $ javac -d ./bin/ -cp src/ src/veip/synthesis/SynthesisMain.java
 5) If the compile is successful, all byte-codes should have been written to bin/.
 $ cd ./bin
 
-6a) Run the verification application 
-$ java veip.verification.VerificationMain <fsmFile>
+6a) Run the verification application. EXAMPLE: 
+$ java veip.verification.VerificationMain ../testFSM/test1/G.fsm
 
-6b) Run the synthesis application 
-$ java veip.synthesis.SynthesisMain <fsmFile> <IAFile>
+6b) Run the synthesis application. EXAMPLE: 
+$ java veip.synthesis.SynthesisMain ../testFSM/test2/G.fsm ../testFSM/test2/IA.fsm
 
 7) Outputs will appear in the directory from which the call was made.
 
