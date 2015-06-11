@@ -44,7 +44,8 @@ $ java veip.synthesis.SynthesisMain -g ../testFSM/test2/G.fsm ../testFSM/test2/I
 
 
 ## Automata File Format:
-Two kinds of models are considered: 
+Two models are considered: 
+
 1) Finite-State Automata (FSA)
 The file format of follows the .fsm file format used in DESUMA (https://wiki.eecs.umich.edu/desuma/index.php/DESUMA). However, .fsm files assume there is only one initial state. To allow multiple initial states, we add the number of initial states (say k) next to the number of total states in the first line of the file. The first k states in the file are the initial states. See testFSM/test2/G.fsm for example.
 
