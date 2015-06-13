@@ -34,39 +34,68 @@ public final class VerificationUtilities {
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
 				pfa, true);
 		FSM obsfsm = new FSM(currentStateEstimator);
-		double opacityLevel = 0;
+		pfa.resetAllSecretStates();
 		PFA Hpfa = CompositionUtilities
 				.pairwiseParallelComposition(pfa, obsfsm);
 		int n = Hpfa.getNumberOfStates();
 
 		SimpleMatrix A = Hpfa.getTransitionMatrix();
+		
 		SimpleMatrix b = new SimpleMatrix(n, 1);
 		for (int i = 0; i < n; i++) {
 			if (!(Hpfa.getState(i)).isNonsecret()) {
 				b.set(i, 1);
 				for (int j = 0; j < n; j++) {
-					A.set(j, j, 0);
+					A.set(i, j, 0);
 				}
 			}
 		}
 		SimpleMatrix I = SimpleMatrix.identity(n);
+		//TODO wrong calculation, absorbing probability should be 0
+		(I.minus(A)).print();
+		b.print();
 		SimpleMatrix absorptionVector = (I.minus(A)).solve(b);
+		
 		// absorptionVector.print();
 
 		// absorption should be an 1x1 matrix
 		SimpleMatrix absorption = (Hpfa.getInitialDistribution())
 				.mult(absorptionVector);
 		// Hpfa.getInitialDistribution().print();
-		opacityLevel = absorption.get(0);
+		double opacityLevel = 1- absorption.get(0);
 		return opacityLevel;
 	}
 
+	public static boolean isCurrentStateOpaque(FSM fsm){
+		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
+				fsm, true);
+		return currentStateEstimator.isCurrentStateOpaque();
+	}
+
+	public static void isCurrentStateOpaqueAnswer(FSM fsm){
+		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
+				fsm, true);
+		currentStateEstimator.printEstimator();
+		if (currentStateEstimator.isCurrentStateOpaque())
+			System.out.println("Current state opaque? Yes");
+		else {
+			System.out.print("Current state opaque? No ");
+			System.out.print("(Estimates ");
+			currentStateEstimator.printUnsafeStates();
+			System.out.println("reveal the secret)");
+		}	
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String file = "testFSM/stochastic/H.pfa";
 		PFA pfa = new PFA(file);
 		double opacityLevel = VerificationUtilities.computeOpacityLevel(pfa);
 		System.out.println("Opacity level: " + opacityLevel);
+		
+		
+		
+		
 	}
 
 }

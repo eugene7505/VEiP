@@ -18,17 +18,20 @@ public class CurrentStateEstimator {
 	HashMap<String, EstimatorState> estimatorStateMap;
 	HashMap<String, Event> localEventMap;
 
-	public CurrentStateEstimator(FSM fsm) {
+	public CurrentStateEstimator(FSM fsm, boolean unobsReach) {
 		this.fsm = fsm;
-		buildCurrentStateEstimator();
+		if (unobsReach)
+			buildCurrentStateEstimator_UR();
+		else buildCurrentStateEstimator_NoUR();
 	}
 
+	
 	/*
 	 * This function builds the current state estimator by determinizing the
 	 * corresponding fsm. Notice that the input fsm could have a set of initial state and could be nondeterministic 
 	 * However, the resulting estimator is always deterministic 
 	 */
-	private void buildCurrentStateEstimator() {
+	private void buildCurrentStateEstimator_UR() {
 		numberOfStates = 0;
 		estimatorStateMap = new HashMap<String, EstimatorState>();
 		localEventMap = new HashMap<String, FSM.Event>();
@@ -70,6 +73,17 @@ public class CurrentStateEstimator {
 			estimate.updateNumberOfTransitions();
 		}
 	}
+	
+	//TODO
+	private void buildCurrentStateEstimator_NoUR() {
+	
+		
+		
+		
+		
+	}
+	
+	
 
 	/* This function adds a new estimator state if the estimate does not already exists
 	 * The input is a list of states that the estimate contains and the output is an EstimateState instance

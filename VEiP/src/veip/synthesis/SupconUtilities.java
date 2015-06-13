@@ -86,10 +86,10 @@ public final class SupconUtilities {
 					illegalStates.add(state);
 			}
 		}
-		System.out.println("===== illegal states =====");
-		for (State state : illegalStates){
-			System.out.println(state.getName());
-		}
+//		System.out.println("===== illegal states =====");
+//		for (State state : illegalStates){
+//			System.out.println(state.getName());
+//		}
 		
 	}
 

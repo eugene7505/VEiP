@@ -59,6 +59,7 @@ public class FSM {
 		}
 	}
 
+	protected int stateCounter = 0; 
 	protected String file = new String("");
 	protected int numberOfStates;
 	protected int numberOfInitialState;
@@ -79,6 +80,8 @@ public class FSM {
 		localEventMap = new HashMap<String, Event>();
 	};
 
+	//TODO use stateList?
+	
 	@SuppressWarnings("unchecked")
 	public FSM(FSM fsm) {
 		numberOfStates = fsm.numberOfStates;
@@ -113,13 +116,14 @@ public class FSM {
 
 	public FSM(String fileName) throws FileNotFoundException {
 		file = fileName;
-		initialStateList = new ArrayList<State>();
-		stateMap = new HashMap<String, State>();
 		localEventMap = new HashMap<String, Event>();
 
 		Scanner s = new Scanner(new FileInputStream(fileName));
 		numberOfStates = s.nextInt();
 		numberOfInitialState = s.nextInt();
+		stateMap = new HashMap<String, State>(numberOfStates);
+		initialStateList = new ArrayList<State>(numberOfInitialState);
+		
 		for (int i = 0; i < numberOfStates; i++) {
 			String stateName = s.next();
 			State state = addState(stateName);
@@ -160,11 +164,11 @@ public class FSM {
 		numberOfStates = currentStateEstimator.getNumberOfStates();
 		numberOfInitialState = 1;
 
-		initialStateList = new ArrayList<State>();
+		initialStateList = new ArrayList<State>(numberOfInitialState);
 		initialStateList
 				.add((State) currentStateEstimator.getInitialEstimate());
 
-		stateMap = new HashMap<String, State>();
+		stateMap = new HashMap<String, State>(numberOfStates);
 		for (Map.Entry<String, EstimatorState> stateEntry : currentStateEstimator
 				.getEstimatorStateMap().entrySet()) {
 			String stateName = stateEntry.getKey();
@@ -186,14 +190,19 @@ public class FSM {
 	 * state named stateName already exists If there is already a state with the
 	 * same name, then return the State object of that name
 	 */
+	
 	public State addState(String stateName) {
-		if (!stateMap.containsKey(stateName))
+		if (!stateMap.containsKey(stateName)){
 			stateMap.put(stateName, new State(stateName));
-
+		}
 		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1){
+			state.setIndex(stateCounter);
+			stateCounter++;
+		}
 		return state;
 	}
-
+	
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
@@ -203,6 +212,10 @@ public class FSM {
 			stateMap.put(stateName, state);
 		}
 		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1){
+			state.setIndex(stateCounter);
+			stateCounter++;
+		}
 		return state;
 	}
 
@@ -220,7 +233,6 @@ public class FSM {
 			state.setInitial(true);
 			initialStateList.add(state);
 		}
-
 	}
 
 	/*
@@ -256,6 +268,20 @@ public class FSM {
 		else return stateMap.get(stateName);
 	}
 
+	public void addSecretState (String stateName){
+		if (!stateMap.containsKey(stateName)){
+			System.out.println("State " + stateName
+					+ "does not exists. WRONG!");
+		}
+		else stateMap.get(stateName).setNonsecret(false);;
+	}
+	
+	public void resetAllSecretStates(){
+		for (Map.Entry<String, State> stateEntry: stateMap.entrySet()){
+			stateEntry.getValue().setNonsecret(true);
+		}
+	}
+	
 	/*
 	 * First check if such an event exists in any of the automata if no, then
 	 * create a new event and add to both globalEventMap and localEventMap if
@@ -272,7 +298,6 @@ public class FSM {
 			event = globalEventMap.get(eventName);
 			localEventMap.put(eventName, event);
 		}
-
 		else {
 			event = globalEventMap.get(eventName);
 			if (!localEventMap.containsKey(eventName)) {
@@ -292,6 +317,7 @@ public class FSM {
 			globalEventMap.put(eventName, new Event(eventName, controllable,
 					observable));
 			event = globalEventMap.get(eventName);
+			addObsUnobsEventMap(event);
 			localEventMap.put(eventName, event);
 		} else {
 			event = globalEventMap.get(eventName);
@@ -305,6 +331,7 @@ public class FSM {
 								+ (observable ? "o" : "uo"));
 				event.setControllable(controllable);
 				event.setObservable(observable);
+				addObsUnobsEventMap(event);
 			}
 			if (!localEventMap.containsKey(eventName)) {
 				localEventMap.put(eventName, event);
@@ -457,7 +484,7 @@ public class FSM {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 
-		String file = "testFSM/G.fsm";
+		String file = "testFSM/test1/G.fsm";
 		FSM fsm = new FSM(file);
 		fsm.printFSM();
 		System.out.println("======");

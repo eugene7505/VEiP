@@ -5,19 +5,17 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.ejml.simple.SimpleMatrix;
+
+import veip.fsm.FSM.Event;
 
 /*
  * stateList is added to index states
  */
 public class PFA extends FSM {
-
-	SimpleMatrix initialDistribution;
-	private HashMap<Event, SimpleMatrix> eventMatrixMap;
-	private ArrayList<State> stateList;
-	private static double epsilon = 5.96e-8;
 
 	public PFA(int n) {
 		super();
@@ -29,7 +27,9 @@ public class PFA extends FSM {
 
 	public PFA(FSM fsm) {
 		super(fsm);
+		// TODO every initial state has 1/n probability
 		initialDistribution = new SimpleMatrix(1, numberOfStates);
+		numberOfInitialState = fsm.numberOfInitialState;
 		eventMatrixMap = new HashMap<Event, SimpleMatrix>();
 		stateList = new ArrayList<State>(numberOfStates);
 		for (Map.Entry<String, Event> eventEntry : localEventMap.entrySet()) {
@@ -93,7 +93,61 @@ public class PFA extends FSM {
 		}
 		updateNumberOfInitialStates();
 		s.close();
+	}
 
+	// TODO
+	/*
+	 * This constructor builds an equivalent PFA from an HMM The transformation
+	 * is done using the algorithm in Pupont et al 2005 But the transformation
+	 * does not seem to preserve causality between observations and transitions
+	 * in HMM and PFA. Can be modified
+	 */
+	public PFA(HMM hmm) {
+		initialDistribution = hmm.getInitialDistribution();
+		numberOfStates = hmm.numberOfStates;
+		stateMap = new HashMap<String, State>(numberOfStates);
+		stateList = new ArrayList<State>(numberOfStates);
+		for (int i = 0; i < numberOfStates; i++) {
+			addState(String.valueOf(i));
+		}
+		initialStateList = new ArrayList<State>(numberOfStates);
+
+		localEventMap = new HashMap<String, Event>(hmm.numberOfObservations);
+		eventMatrixMap = new HashMap<Event, SimpleMatrix>();
+		for (int i = 0; i < hmm.numberOfObservations; i++) {
+			String eventName = hmm.observationList.get(i);
+			Event event = addEvent(eventName, true, true);
+			eventMatrixMap.put(event, new SimpleMatrix(numberOfStates,
+					numberOfStates));
+		}
+		
+		
+
+		for (int i = 0; i < numberOfStates; i++) {
+			State state = stateList.get(i);
+			if (initialDistribution.get(i) > 0)
+				addInitialState(state);
+			for (int j = 0; j < numberOfStates; j++) {
+				if (hmm.stateTransitionMatrix.get(i, j) > 0) {
+					for (int k = 0; k < hmm.numberOfObservations; k++) {
+						Event event = localEventMap.get(hmm.observationList
+								.get(k));
+						if (hmm.observationMatrix.get(i, k) > 0) {
+							state.addTransition(event, stateList.get(j));
+							setEventMatrix(
+									event,
+									i,
+									j,
+									hmm.observationMatrix.get(i, k)
+											* hmm.stateTransitionMatrix.get(i,
+													j));
+						}
+					}
+				}
+			}
+			state.updateNumberOfTransitions();
+		}
+		updateNumberOfInitialStates();
 	}
 
 	/*
@@ -145,11 +199,10 @@ public class PFA extends FSM {
 		return state;
 	}
 
-
-	public State getState(int index){
+	public State getState(int index) {
 		return stateList.get(index);
 	}
-	
+
 	public void setEventMatrix(Event e, int i, int j, double p) {
 		if (!eventMatrixMap.containsKey(e))
 			eventMatrixMap.put(e, new SimpleMatrix(numberOfStates,
@@ -166,7 +219,8 @@ public class PFA extends FSM {
 	}
 
 	public SimpleMatrix getTransitionMatrix() {
-		SimpleMatrix transitionMatrix = new SimpleMatrix(numberOfStates,numberOfStates);
+		SimpleMatrix transitionMatrix = new SimpleMatrix(numberOfStates,
+				numberOfStates);
 		for (Map.Entry<Event, SimpleMatrix> matrixEntry : eventMatrixMap
 				.entrySet()) {
 			transitionMatrix = transitionMatrix.plus(matrixEntry.getValue());
@@ -174,23 +228,24 @@ public class PFA extends FSM {
 		return transitionMatrix;
 	}
 
-	public SimpleMatrix getInitialDistribution(){
+	public SimpleMatrix getInitialDistribution() {
 		return initialDistribution;
 	}
-	
+
 	public void updateSize() {
 		initialDistribution.reshape(1, numberOfStates);
 		stateList = new ArrayList<State>(stateList.subList(0, numberOfStates));
 		for (Map.Entry<Event, SimpleMatrix> matrixEntry : eventMatrixMap
 				.entrySet()) {
 			SimpleMatrix matrix = matrixEntry.getValue();
-			SimpleMatrix resizedMatrix = matrix.extractMatrix(0, numberOfStates, 0, numberOfStates);
+			SimpleMatrix resizedMatrix = matrix.extractMatrix(0,
+					numberOfStates, 0, numberOfStates);
 			matrixEntry.setValue(resizedMatrix);
 		}
 	}
 
 	public void printPFA() {
-		System.out.println(numberOfStates + "\t" + numberOfInitialState);
+		System.out.println(numberOfStates);
 
 		for (int i = 0; i < numberOfStates; i++) {
 			State state = stateList.get(i);
@@ -213,11 +268,47 @@ public class PFA extends FSM {
 		}
 	}
 
+	SimpleMatrix initialDistribution;
+	private HashMap<Event, SimpleMatrix> eventMatrixMap;
+	private ArrayList<State> stateList;
+	private static double epsilon = 5.96e-8;
+
 	public static void main(String[] args) throws FileNotFoundException {
 
-		String file = "testFSM/stochastic/H.pfa";
-		PFA pfa = new PFA(file);
+		int n = 4;
+		int o = 2;
+		SimpleMatrix A = new SimpleMatrix(n, n);
+		A.set(0, 1, 0.9);
+		A.set(0, 0, 0.1);
+		A.set(1, 2, 0.7);
+		A.set(1, 3, 0.3);
+		A.set(2, 0, 0.1);
+		A.set(2, 1, 0.9);
+		A.set(3, 2, 0.7);
+		A.set(3, 3, 0.3);
+		SimpleMatrix B = new SimpleMatrix(n, o);
+		B.set(0, 0, 0.2);
+		B.set(0, 1, 0.8);
+		B.set(1, 0, 0.3);
+		B.set(1, 1, 0.7);
+		B.set(2, 0, 0.8);
+		B.set(2, 1, 0.2);
+		B.set(3, 0, 0.9);
+		B.set(3, 1, 0.1);
+		SimpleMatrix pi = new SimpleMatrix(1, n);
+		pi.set(0, 0.04);
+		pi.set(1, 0.36);
+		pi.set(2, 0.42);
+		pi.set(3, 0.18);
+
+		ArrayList<String> observations = new ArrayList<String>();
+		observations.add("a");
+		observations.add("b");
+		HMM hmm = new HMM(n, o, A, B, pi, observations);
+		hmm.printHMM();
+		System.out.println();
+
+		PFA pfa = new PFA(hmm);
 		pfa.printPFA();
 	}
-
 }

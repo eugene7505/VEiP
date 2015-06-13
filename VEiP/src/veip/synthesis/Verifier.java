@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import veip.fsm.FSM;
-import veip.fsm.ParallelCompositionUtilities;
+import veip.fsm.CompositionUtilities;
 import veip.fsm.State;
 import veip.fsm.FSM.Event;
 
@@ -25,8 +25,8 @@ public class Verifier {
 		this.estimator = estimator;
 		buildSafeEstimator();
 		buildInsertionEstimator();
-		verifier = ParallelCompositionUtilities
-				.pairwiseParallelComposition_singleInitialState(safeEstimator,
+		verifier = CompositionUtilities
+				.pairwiseParallelComposition(safeEstimator,
 						insertionEstimator);
 	}
 
