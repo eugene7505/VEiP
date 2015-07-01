@@ -22,14 +22,15 @@ public class CurrentStateEstimator {
 		this.fsm = fsm;
 		if (unobsReach)
 			buildCurrentStateEstimator_UR();
-		else buildCurrentStateEstimator_NoUR();
+		else
+			buildCurrentStateEstimator_UP();
 	}
 
-	
 	/*
 	 * This function builds the current state estimator by determinizing the
-	 * corresponding fsm. Notice that the input fsm could have a set of initial state and could be nondeterministic 
-	 * However, the resulting estimator is always deterministic 
+	 * corresponding fsm. Notice that the input fsm could have a set of initial
+	 * state and could be nondeterministic However, the resulting estimator is
+	 * always deterministic
 	 */
 	private void buildCurrentStateEstimator_UR() {
 		numberOfStates = 0;
@@ -40,7 +41,7 @@ public class CurrentStateEstimator {
 				.getInitialStateList());
 		initialEstimate = addEstimate(initialStateWithUnobservableReach);
 		initialEstimate.setInitial(true);
-		
+
 		// BFS to build the cse
 		Stack<EstimatorState> stack = new Stack<EstimatorState>();
 		stack.push(initialEstimate);
@@ -55,7 +56,11 @@ public class CurrentStateEstimator {
 				boolean eventEnabled = false;
 				for (int i = 0; i < estimate.stateEstimate.size(); i++) {
 					State state = estimate.stateEstimate.get(i);
-					if (state.getNextStateList(event) != null) { //has this transition, should add to transition
+					if (state.getNextStateList(event) != null) { // has this
+																	// transition,
+																	// should
+																	// add to
+																	// transition
 						localEventMap.put(event.getName(), event);
 						unionStateList(nextStates,
 								state.getNextStateList(event));
@@ -66,41 +71,82 @@ public class CurrentStateEstimator {
 				if (eventEnabled == true) {
 					EstimatorState nextEstimate = addEstimate(nextStates);
 					estimate.addTransition(event, nextEstimate);
-					stack.push(nextEstimate);					
+					stack.push(nextEstimate);
 				}
 			}
 			estimate.flagged = true;
 			estimate.updateNumberOfTransitions();
 		}
 	}
-	
-	//TODO
-	private void buildCurrentStateEstimator_NoUR() {
-	
-		
-		
-		
-		
-	}
-	
-	
 
-	/* This function adds a new estimator state if the estimate does not already exists
-	 * The input is a list of states that the estimate contains and the output is an EstimateState instance
-	 * The input state list is sorted before we check if the corresponding estimate exists
-	 * @param stateList that contains the list of states we build the estimate from
-	 * @return EstimatorState 
+	private void buildCurrentStateEstimator_UP() { //unobservable prefix: consider uo a for transition a 
+		numberOfStates = 0;
+		estimatorStateMap = new HashMap<String, EstimatorState>();
+		localEventMap = new HashMap<String, FSM.Event>();
+
+		ArrayList<State> initialState = fsm.getInitialStateList();
+		initialEstimate = addEstimate(initialState);
+		initialEstimate.setInitial(true);
+
+		// BFS to build the cse
+		Stack<EstimatorState> stack = new Stack<EstimatorState>();
+		stack.push(initialEstimate);
+		while (!stack.empty()) {
+			EstimatorState estimate = stack.pop();
+			if (estimate.flagged)
+				continue;
+			for (Map.Entry<String, Event> obsEventEntry : FSM.globalObsEventMap
+					.entrySet()) {
+				ArrayList<State> urStates = unobserverbleReach(estimate.stateEstimate);
+				ArrayList<State> nextStates = new ArrayList<State>();
+				Event event = obsEventEntry.getValue();
+				boolean eventEnabled = false;
+				for (int i = 0; i < urStates.size(); i++) {
+					State state = urStates.get(i);
+					if (state.getNextStateList(event) != null) { // has this
+																	// transition,
+																	// should
+																	// add to
+																	// transition
+						localEventMap.put(event.getName(), event);
+						unionStateList(nextStates,
+								state.getNextStateList(event));
+						eventEnabled = true;
+					}
+				}
+				if (eventEnabled == true) {
+					EstimatorState nextEstimate = addEstimate(nextStates);
+					estimate.addTransition(event, nextEstimate);
+					stack.push(nextEstimate);
+				}
+			}
+			estimate.flagged = true;
+			estimate.updateNumberOfTransitions();
+		}
+
+	}
+
+	/*
+	 * This function adds a new estimator state if the estimate does not already
+	 * exists The input is a list of states that the estimate contains and the
+	 * output is an EstimateState instance The input state list is sorted before
+	 * we check if the corresponding estimate exists
+	 * 
+	 * @param stateList that contains the list of states we build the estimate
+	 * from
+	 * 
+	 * @return EstimatorState
 	 */
 	private EstimatorState addEstimate(ArrayList<State> stateList) {
-		Collections.sort(stateList, new State.StateComparator());		
+		Collections.sort(stateList, new State.StateComparator());
 		EstimatorState newEstimate = new EstimatorState(stateList);
 		String newEstimateName = newEstimate.getName();
 		if (estimatorStateMap.containsKey(newEstimateName)) {
 			return estimatorStateMap.get(newEstimateName);
-		} else{
+		} else {
 			estimatorStateMap.put(newEstimateName, newEstimate);
 			numberOfStates++;
-			//System.out.println("creating" + newEstimateName);
+			// System.out.println("creating" + newEstimateName);
 		}
 		return newEstimate;
 	}
@@ -131,7 +177,7 @@ public class CurrentStateEstimator {
 		}
 		return unobservableReachStates;
 	}
-	
+
 	/*
 	 * This function returns the union of two state lists Specifically, elements
 	 * in list2 are added to list1 if they are not already in list1
@@ -144,46 +190,48 @@ public class CurrentStateEstimator {
 				list1.add(list2.get(i));
 		}
 	}
-	
-	public int getNumberOfStates(){
+
+	public int getNumberOfStates() {
 		return numberOfStates;
 	}
-	
-	public EstimatorState getInitialEstimate(){
+
+	public EstimatorState getInitialEstimate() {
 		return initialEstimate;
 	}
-		
-	public HashMap<String, EstimatorState> getEstimatorStateMap(){
+
+	public HashMap<String, EstimatorState> getEstimatorStateMap() {
 		return estimatorStateMap;
 	}
-	
-	public HashMap<String, Event> getLocalEventMap(){
+
+	public HashMap<String, Event> getLocalEventMap() {
 		return localEventMap;
 	}
 
-	
-	
-
-	/* This function returns whether the fsm is current state opaque or not.
+	/*
+	 * This function returns whether the fsm is current state opaque or not.
+	 * 
 	 * @return true if the fsm is opaque and false if the fsm is not opaque
 	 */
-	public boolean isCurrentStateOpaque(){
-		for (Map.Entry<String, EstimatorState> estimateEntry: estimatorStateMap.entrySet()){
+	public boolean isCurrentStateOpaque() {
+		for (Map.Entry<String, EstimatorState> estimateEntry : estimatorStateMap
+				.entrySet()) {
 			if (!estimateEntry.getValue().isOpaque()) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	public void printUnsafeStates(){
-		for (Map.Entry<String, EstimatorState> estimateEntry: estimatorStateMap.entrySet()){
+
+	public void printUnsafeStates() {
+		for (Map.Entry<String, EstimatorState> estimateEntry : estimatorStateMap
+				.entrySet()) {
 			if (!estimateEntry.getValue().isOpaque()) {
-				System.out.print("{"+ estimateEntry.getKey() + "} ");;
+				System.out.print("{" + estimateEntry.getKey() + "} ");
+				;
 			}
 		}
 	}
-	
+
 	public void printEstimator() {
 		System.out.println(numberOfStates + "\t" + "1"); // #initial = 1
 		System.out.println();
@@ -191,8 +239,8 @@ public class CurrentStateEstimator {
 		System.out.println(initial.getName() + "\t"
 				+ ((initial.isOpaque()) ? 1 : 0) + "\t"
 				+ initial.getNumberOfTransitions());
-		for (Map.Entry<Event, ArrayList<State>> transitionEntry : initial.getAllTransitions()
-				.entrySet()) {
+		for (Map.Entry<Event, ArrayList<State>> transitionEntry : initial
+				.getAllTransitions().entrySet()) {
 			Event event = transitionEntry.getKey();
 			ArrayList<State> nextEstimateList = transitionEntry.getValue();
 			if (nextEstimateList.size() != 1)
@@ -208,7 +256,8 @@ public class CurrentStateEstimator {
 		for (Map.Entry<String, EstimatorState> entry : estimatorStateMap
 				.entrySet()) {
 			EstimatorState estimate = entry.getValue();
-			if (((State)estimate).isInitial()) continue;
+			if (((State) estimate).isInitial())
+				continue;
 			System.out.println();
 			System.out.println(estimate.getName() + "\t"
 					+ ((estimate.isOpaque()) ? 1 : 0) + "\t"
@@ -229,7 +278,8 @@ public class CurrentStateEstimator {
 			}
 		}
 	}
-	public boolean isInitialStateSafe(){
+
+	public boolean isInitialStateSafe() {
 		return initialEstimate.isNonsecret();
 	}
 }

@@ -28,47 +28,11 @@ public class VerificationMain {
 			if ((args[0]).equals("-f")) {
 				String fsmFile = args[1];
 				FSM fsm = new FSM(fsmFile);
-				VerificationUtilities.isCurrentStateOpaqueAnswer(fsm);
+				VerificationUtilities.answerCurrentStateOpacity_UP(fsm);
 			} else if ((args[0]).equals("-p")) {
-//				String pfaFile = args[1];
-//				PFA pfa = new PFA(pfaFile);
-//				pfa.printPFA();
-				int n = 4;
-				int o = 2;
-				SimpleMatrix A = new SimpleMatrix(n,n);
-				A.set(0, 1, 0.9);
-				A.set(0, 0, 0.1);
-				A.set(1, 2, 0.7);
-				A.set(1, 3, 0.3);
-				A.set(2, 0, 0.1);
-				A.set(2, 1, 0.9);
-				A.set(3, 2, 0.7);
-				A.set(3, 3, 0.3);
-				SimpleMatrix B = new SimpleMatrix(n, o);
-				B.set(0, 0, 0.2);
-				B.set(0, 1, 0.8);
-				B.set(1, 0, 0.3);
-				B.set(1, 1, 0.7);
-				B.set(2, 0, 0.8);
-				B.set(2, 1, 0.2);
-				B.set(3, 0, 0.9);
-				B.set(3, 1, 0.1);
-				SimpleMatrix pi = new SimpleMatrix(1, n);
-				pi.set(0, 0.4);
-				pi.set(2, 0.42);
-				pi.set(3, 0.18);
-				
-				ArrayList<String> observations = new ArrayList<String>();
-				observations.add("a");
-				observations.add("b");
-				HMM hmm = new HMM(n, o, A, B, pi, observations);
-				//hmm.printHMM();
-				System.out.println();
-			
-				PFA pfa = new PFA(hmm);
-				pfa.addSecretState("1");
-				pfa.printPFA();				
-				VerificationUtilities.isCurrentStateOpaqueAnswer(pfa);			
+				String pfaFile = args[1];
+				PFA pfa = new PFA(pfaFile);		
+				VerificationUtilities.answerCurrentStateOpacity_UP(pfa);			
 				
 				double opacityLevel = VerificationUtilities.computeOpacityLevel(pfa);
 				System.out.println("Opacity level: " + opacityLevel);			

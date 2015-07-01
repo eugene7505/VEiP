@@ -25,9 +25,13 @@ public class PFA extends FSM {
 		stateList = new ArrayList<State>(numberOfStates);
 	}
 
+	/*This constructor builds a PFA from a given FSM. 
+	 * By default, initial probability and transition probability are equally probable among all states
+	 * or all outgoing transitions
+	 */
 	public PFA(FSM fsm) {
 		super(fsm);
-		// TODO every initial state has 1/n probability
+		// TODO every outgoing transition is equally likely 
 		initialDistribution = new SimpleMatrix(1, numberOfStates);
 		numberOfInitialState = fsm.numberOfInitialState;
 		eventMatrixMap = new HashMap<Event, SimpleMatrix>();
@@ -40,6 +44,10 @@ public class PFA extends FSM {
 		for (Map.Entry<String, State> stateEntry : stateMap.entrySet()) {
 			State state = stateEntry.getValue();
 			stateList.add(state.index, state);
+		}
+		for (int i = 0; i < fsm.initialStateList.size(); i++){
+			int stateIndex = fsm.initialStateList.get(i).getIndex();
+			initialDistribution.set(stateIndex, 1/numberOfInitialState);
 		}
 	}
 
