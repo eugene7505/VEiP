@@ -5,18 +5,18 @@ import java.io.FileNotFoundException;
 import veip.fsm.FSM;
 
 public class AIS {
-	private FSM aisFSM;
+	private FSM aisFsm;
 	private FSM vuFSM;
 	
 	public AIS(UnfoldedVerifier unfoldedVerifier){
 		vuFSM = unfoldedVerifier.getUnfoldedVerifierFSM();
-		aisFSM = SupconUtilities.stateBasedSupconNonblocking(vuFSM);
+		aisFsm = SupconUtilities.stateBasedSupconNonblocking(vuFSM);
 	}
 	public FSM getAisFSM(){
-		return aisFSM; 
+		return aisFsm; 
 	}
 	public void printAIS(){
-		aisFSM.printFSM();
+		aisFsm.printFSM();
 	}
 	/*
 	public static void main(String[] args) throws FileNotFoundException {

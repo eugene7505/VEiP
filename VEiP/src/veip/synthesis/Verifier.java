@@ -21,13 +21,14 @@ public class Verifier {
 	private FSM insertionEstimator;
 	private FSM verifier;
 
-	public Verifier(FSM estimator) {
+	public Verifier(FSM estimator) throws FileNotFoundException {
 		this.estimator = estimator;
 		buildSafeEstimator();
 		buildInsertionEstimator();
 		verifier = CompositionUtilities
 				.pairwiseParallelComposition(safeEstimator,
 						insertionEstimator);
+		verifier.exportFSM("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/verifier.fsm");
 	}
 
 	/*

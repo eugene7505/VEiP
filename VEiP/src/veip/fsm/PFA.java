@@ -189,7 +189,7 @@ public class PFA extends FSM {
 		}
 		return state;
 	}
-
+	@Override
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
@@ -226,6 +226,12 @@ public class PFA extends FSM {
 		return matrix.get(i, j);
 	}
 
+	public SimpleMatrix getEventMatrix(Event e) {
+		if (!eventMatrixMap.containsKey(e))
+			System.out.println("PFA does not have Event " + e + ". Wrong!");
+		return eventMatrixMap.get(e);
+	}
+	
 	public SimpleMatrix getTransitionMatrix() {
 		SimpleMatrix transitionMatrix = new SimpleMatrix(numberOfStates,
 				numberOfStates);

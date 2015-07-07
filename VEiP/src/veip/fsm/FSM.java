@@ -18,7 +18,7 @@ public class FSM {
 		private boolean observable = true;
 		private boolean controllable = true;
 		private boolean inserted = false;
-
+		
 		public Event(String eventName) {
 			name = eventName;
 		}
@@ -59,7 +59,7 @@ public class FSM {
 		}
 	}
 
-	protected int stateCounter = 0; 
+	protected int stateCounter = 0;
 	protected String file = new String("");
 	protected int numberOfStates;
 	protected int numberOfInitialState;
@@ -71,6 +71,7 @@ public class FSM {
 	public static HashMap<String, Event> globalEventMap = new HashMap<String, Event>();
 	public static HashMap<String, Event> globalObsEventMap = new HashMap<String, Event>();
 	public static HashMap<String, Event> globalUnobsEventMap = new HashMap<String, Event>();
+	public static int numberOfGlobalEvents;
 
 	public FSM() {
 		numberOfStates = 0;
@@ -80,8 +81,8 @@ public class FSM {
 		localEventMap = new HashMap<String, Event>();
 	};
 
-	//TODO use stateList?
-	
+	// TODO use stateList?
+
 	@SuppressWarnings("unchecked")
 	public FSM(FSM fsm) {
 		numberOfStates = fsm.numberOfStates;
@@ -111,7 +112,6 @@ public class FSM {
 		// shallow copy of the localEventMap because event should have global
 		// attributes
 		localEventMap = (HashMap<String, Event>) fsm.localEventMap.clone();
-
 	}
 
 	public FSM(String fileName) throws FileNotFoundException {
@@ -123,7 +123,7 @@ public class FSM {
 		numberOfInitialState = s.nextInt();
 		stateMap = new HashMap<String, State>(numberOfStates);
 		initialStateList = new ArrayList<State>(numberOfInitialState);
-		
+
 		for (int i = 0; i < numberOfStates; i++) {
 			String stateName = s.next();
 			State state = addState(stateName);
@@ -163,7 +163,7 @@ public class FSM {
 	public FSM(CurrentStateEstimator currentStateEstimator) {
 		numberOfStates = currentStateEstimator.getNumberOfStates();
 		numberOfInitialState = 1;
-
+		numberOfGlobalEvents = 0;
 		initialStateList = new ArrayList<State>(numberOfInitialState);
 		initialStateList
 				.add((State) currentStateEstimator.getInitialEstimate());
@@ -190,19 +190,19 @@ public class FSM {
 	 * state named stateName already exists If there is already a state with the
 	 * same name, then return the State object of that name
 	 */
-	
+
 	public State addState(String stateName) {
-		if (!stateMap.containsKey(stateName)){
+		if (!stateMap.containsKey(stateName)) {
 			stateMap.put(stateName, new State(stateName));
 		}
 		State state = stateMap.get(stateName);
-		if (state.getIndex() == -1){
+		if (state.getIndex() == -1) {
 			state.setIndex(stateCounter);
 			stateCounter++;
 		}
 		return state;
 	}
-	
+
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
@@ -212,7 +212,7 @@ public class FSM {
 			stateMap.put(stateName, state);
 		}
 		State state = stateMap.get(stateName);
-		if (state.getIndex() == -1){
+		if (state.getIndex() == -1) {
 			state.setIndex(stateCounter);
 			stateCounter++;
 		}
@@ -222,11 +222,12 @@ public class FSM {
 	/*
 	 * This function make an existing state initial
 	 * 
-	 * @param state If state already exists and was not in the initialStateList, then the function sets
-	 * state.initial = true and adds it to initialStateList
+	 * @param state If state already exists and was not in the initialStateList,
+	 * then the function sets state.initial = true and adds it to
+	 * initialStateList
 	 */
 	public void addInitialState(State state) {
-		if (!stateMap.containsValue(state)) 
+		if (!stateMap.containsValue(state))
 			System.out.println("State " + state.getName()
 					+ "does not exists. WRONG!");
 		else if (!initialStateList.contains(state)) {
@@ -258,30 +259,31 @@ public class FSM {
 			}
 		}
 	}
-	
-	public State getState (String stateName){
-		if (!stateMap.containsKey(stateName)){
-			System.out.println("State " + stateName
-					+ "does not exists. WRONG!");
+
+	public State getState(String stateName) {
+		if (!stateMap.containsKey(stateName)) {
+			System.out
+					.println("State " + stateName + "does not exists. WRONG!");
 			return null;
-		}
-		else return stateMap.get(stateName);
+		} else
+			return stateMap.get(stateName);
 	}
 
-	public void addSecretState (String stateName){
-		if (!stateMap.containsKey(stateName)){
-			System.out.println("State " + stateName
-					+ "does not exists. WRONG!");
-		}
-		else stateMap.get(stateName).setNonsecret(false);;
+	public void addSecretState(String stateName) {
+		if (!stateMap.containsKey(stateName)) {
+			System.out
+					.println("State " + stateName + "does not exists. WRONG!");
+		} else
+			stateMap.get(stateName).setNonsecret(false);
+		;
 	}
-	
-	public void resetAllSecretStates(){
-		for (Map.Entry<String, State> stateEntry: stateMap.entrySet()){
+
+	public void resetAllSecretStates() {
+		for (Map.Entry<String, State> stateEntry : stateMap.entrySet()) {
 			stateEntry.getValue().setNonsecret(true);
 		}
 	}
-	
+
 	/*
 	 * First check if such an event exists in any of the automata if no, then
 	 * create a new event and add to both globalEventMap and localEventMap if
@@ -297,8 +299,7 @@ public class FSM {
 			// globalObsEventMap.put(eventName, new Event(eventName));
 			event = globalEventMap.get(eventName);
 			localEventMap.put(eventName, event);
-		}
-		else {
+		} else {
 			event = globalEventMap.get(eventName);
 			if (!localEventMap.containsKey(eventName)) {
 				localEventMap.put(eventName, event);
@@ -373,6 +374,11 @@ public class FSM {
 		return localEventMap;
 	}
 
+	@SuppressWarnings("unchecked")
+	public void setLocalEventMap(HashMap<String, Event> map) {
+		localEventMap = (HashMap<String, Event>) map.clone();
+	}
+
 	public void updateNumberOfStates() {
 		numberOfStates = stateMap.size();
 	}
@@ -381,15 +387,16 @@ public class FSM {
 		numberOfInitialState = initialStateList.size();
 	}
 
-	public void clearFlags(){
+	public void clearFlags() {
 		for (Map.Entry<String, State> stateEntry : stateMap.entrySet()) {
 			stateEntry.getValue().flagged = false;
 		}
 	}
-	public boolean isEmptyFSM(){
+
+	public boolean isEmptyFSM() {
 		return (stateMap.size() == 0);
-	}	
-	
+	}
+
 	/*
 	 * This method prints the FSM Initial states are printed first. Then other
 	 * states are printed by iterating over the map data structure
@@ -481,7 +488,7 @@ public class FSM {
 		}
 		fileWriter.close();
 	}
-	
+
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String file = "testFSM/test1/G.fsm";
@@ -495,7 +502,7 @@ public class FSM {
 		fsm2.addInitialState(s1);
 		fsm2.removeInitialState(s1);
 		fsm2.printFSM();
-		
+
 		fsm2 = new FSM(fsm);
 		System.out.println("======");
 		fsm2.printFSM();

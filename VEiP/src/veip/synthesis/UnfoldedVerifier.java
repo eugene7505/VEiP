@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Stack;
 
 import veip.fsm.FSM;
+import veip.fsm.FSM.Event;
 import veip.fsm.GraphUtilities;
 import veip.fsm.State;
-import veip.fsm.FSM.Event;
 
 public class UnfoldedVerifier {
 	FSM verifier;
@@ -26,7 +26,7 @@ public class UnfoldedVerifier {
 	HashMap<State, State> YtoEstimateMap; // Ystate in Vu to mState in Estimator
 	Stack<State> stateStack;
 
-	public UnfoldedVerifier(Verifier verifier, boolean symbolic) {
+	public UnfoldedVerifier(Verifier verifier, boolean withInsertionLabels) {
 		this.verifier = verifier.getVerifierFSM();
 		this.estimator = verifier.getEstimatorFSM();
 		unfoldedVerifier = new FSM();
@@ -35,14 +35,14 @@ public class UnfoldedVerifier {
 		YtoEstimateMap = new HashMap<State, State>();
 		stateStack = new Stack<State>();
 
-		if (symbolic)
+		if (!withInsertionLabels)
 			dashedConnectivity = GraphUtilities
 					.dashedConnectivity(this.verifier);
 		else
 			shortestDashedPath = GraphUtilities
 					.shortestDashedPath(this.verifier);
 
-		buildUnfoldedVerifier(symbolic);
+		buildUnfoldedVerifier(withInsertionLabels);
 	}
 
 	public class YEventPair {
@@ -55,7 +55,7 @@ public class UnfoldedVerifier {
 		Event event;
 	}
 
-	private void buildUnfoldedVerifier(boolean symbolic) {
+	private void buildUnfoldedVerifier(boolean withInsertionLabels) {
 		// notice that all y states are marked (i.e., nonsecret)
 		State initialYState = unfoldedVerifier.addState(verifier
 				.getInitialStateList().get(0).getName(), true, true);
@@ -70,7 +70,7 @@ public class UnfoldedVerifier {
 				if (state.isNonsecret())
 					expandYState(state);
 				else
-					expandZState(state, symbolic);
+					expandZState(state, withInsertionLabels);
 				state.flagged = true;
 			}
 		}
@@ -82,7 +82,9 @@ public class UnfoldedVerifier {
 		State estimate = getEstimate(ystate);
 		for (Map.Entry<Event, ArrayList<State>> transitionEntry : estimate
 				.getAllTransitions().entrySet()) {
-			Event event = transitionEntry.getKey();
+			Event event = unfoldedVerifier.addEvent(transitionEntry.getKey()
+					.getName(), transitionEntry.getKey().isControllable(),
+					transitionEntry.getKey().isObservable());
 			State nextZstate = unfoldedVerifier.addState(
 					generateZStateName(ystate, event), false, false);
 			stateStack.push(nextZstate);
@@ -92,13 +94,13 @@ public class UnfoldedVerifier {
 		ystate.updateNumberOfTransitions();
 	}
 
-	private void expandZState(State zstate, boolean symbolic) {
+	private void expandZState(State zstate, boolean withInsertionLabels) {
 		State mState = YtoMStateMap.get(getYEventPair(zstate).ystate);
 		Event eventPart = getYEventPair(zstate).event;
 		for (Map.Entry<String, State> stateEntry : verifier.getStateMap()
 				.entrySet()) {
 			State mprimeState = stateEntry.getValue();
-			if (symbolic) {
+			if (!withInsertionLabels) {
 				if (!dashedConnectivity.get(mState).get(mprimeState)
 						.booleanValue())
 					continue;
@@ -115,10 +117,10 @@ public class UnfoldedVerifier {
 							mprimeState.getName(), true, true);
 					zstate.addTransition(mprimEvent, nextYState);
 				}
-			}
-			else{
-				String insertedString = shortestDashedPath.get(mState).get(mprimeState);
-				if ( insertedString == null)
+			} else {
+				String insertedString = shortestDashedPath.get(mState).get(
+						mprimeState);
+				if (insertedString == null)
 					continue;
 				else {
 					ArrayList<State> nextMStates = mprimeState
@@ -211,9 +213,10 @@ public class UnfoldedVerifier {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		final long startTime = System.currentTimeMillis();
-		FSM estimator = new FSM("testFSM/G.fsm");
+		FSM estimator = new FSM("testFSM/test1/G.fsm");
 		Verifier verifier = new Verifier(estimator);
-		UnfoldedVerifier unfoldedVerifier = new UnfoldedVerifier(verifier, false);
+		UnfoldedVerifier unfoldedVerifier = new UnfoldedVerifier(verifier,
+				false);
 		final long endTime = System.currentTimeMillis();
 		System.out.println("Total computation time : " + (endTime - startTime)
 				+ " ms");

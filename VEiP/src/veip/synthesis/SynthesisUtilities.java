@@ -3,49 +3,44 @@ package veip.synthesis;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
-
 import veip.fsm.FSM;
 import veip.fsm.FSM.Event;
-import veip.fsm.PFA;
 import veip.fsm.State;
 
 public final class SynthesisUtilities {
-	static FSM gameFSM;
+	static FSM gameGraph;
 
 	private SynthesisUtilities() {
 	}
 
 	public static InsertionAutomaton greedySynthesis(AIS ais) {
-		gameFSM = ais.getAisFSM();
+		gameGraph = ais.getAisFSM();
 		InsertionAutomaton ia = synthesizeGreedyInsertionAutomaton();
 		return ia;
 	}
-	
+
 	public static InsertionAutomaton optimalSynthesis(AIS ais) {
-		gameFSM = ais.getAisFSM();
+		gameGraph = ais.getAisFSM();
 		InsertionAutomaton ia = synthesizeOptimalIA();
 		return ia;
 	}
 
-	public static InsertionAutomaton optimalValueSynthesis(UnfoldedVerifier vu, PFA pfa){
-		gameFSM = vu.getUnfoldedVerifierFSM();
-		InsertionAutomaton ia = synthesizeStochasticOptimalIA(pfa);
-		return ia;
-	}
-	
 	public static InsertionAutomaton ppSynthesis(AIS ais) {
-		gameFSM = ais.getAisFSM();
+		gameGraph = ais.getAisFSM();
 		InsertionAutomaton ia = synthesizePublicIA();
 		return ia;
 	}
 
+	 /* =======================
+	  * Private functions for greedy synthesis
+	  */	
 	private static InsertionAutomaton synthesizeGreedyInsertionAutomaton() {
 		InsertionAutomaton ia = new InsertionAutomaton();
-		gameFSM.clearFlags();
+		gameGraph.clearFlags();
 		Stack<State> stateStack = new Stack<State>();
-		stateStack.add(gameFSM.getInitialStateList().get(0));
+		stateStack.add(gameGraph.getInitialStateList().get(0));
 
-		State initialAisState = gameFSM.getInitialStateList().get(0);
+		State initialAisState = gameGraph.getInitialStateList().get(0);
 		stateStack.add(initialAisState);
 
 		while (!stateStack.isEmpty()) {
@@ -84,18 +79,19 @@ public final class SynthesisUtilities {
 		return ia;
 	}
 
-	//TODO
+	/* =======================
+     * Private functions for optimal synthesis
+     */
+	// TODO
 	private static InsertionAutomaton synthesizeOptimalIA() {
 		InsertionAutomaton ia = new InsertionAutomaton();
 		return ia;
 	}
-	//TODO
-	private static InsertionAutomaton synthesizeStochasticOptimalIA(PFA pfa) {
-		InsertionAutomaton ia = new InsertionAutomaton();
-		return ia;
-	}
-	
-	//TODO
+
+	 /* =======================
+	  * Private functions for pp-enforcing synthesis
+	  */
+	// TODO
 	private static InsertionAutomaton synthesizePublicIA() {
 		InsertionAutomaton ia = new InsertionAutomaton();
 		return ia;

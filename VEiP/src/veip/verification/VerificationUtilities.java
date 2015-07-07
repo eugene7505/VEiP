@@ -23,9 +23,9 @@ public final class VerificationUtilities {
 	 * N. Hadjicostis. 
 	 * Specifically, it first obtain Hpfa, composition of pfa and its observer
 	 * automaton. Then, compute the absorption probability of Hpfa: (I-A)p = b
-	 * b is an nx1 matrix where bi=0 if state i is safe, and bi=1 otherwise (0-step absorption probability)
+	 * b is an nx1 matrix where bi=1 if state i is unsafe, and bi=0 otherwise (0-step absorption probability)
 	 * A is the transition matrix but we pre-process it such that aij = 0 for all j if
-	 * state i unsafe (i.e., state i is absorbing)
+	 * state i is in a closed class (i.e., state i is absorbing)
 	 * I is the identical matrix
 	 * We solve for p which is the absorption probability vector
 	 * Finally, opacity level = initialDistribution * p
@@ -35,10 +35,10 @@ public final class VerificationUtilities {
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
 				pfa, false);
 		FSM obsfsm = new FSM(currentStateEstimator);
-		pfa.resetAllSecretStates();
+		//pfa.resetAllSecretStates();
 		PFA Hpfa = CompositionUtilities
 				.pairwiseParallelComposition(pfa, obsfsm);
-		Hpfa.printPFA();
+		//Hpfa.printPFA();
 		int n = Hpfa.getNumberOfStates();
 
 		SimpleMatrix unsafeEstimateVector = new SimpleMatrix(n,1);
@@ -52,7 +52,7 @@ public final class VerificationUtilities {
 		// absorption should be an 1x1 matrix
 		SimpleMatrix absorption = (Hpfa.getInitialDistribution())
 				.mult(absorptionVector);
-		Hpfa.getInitialDistribution().print();
+		//Hpfa.getInitialDistribution().print();
 		double opacityLevel = 1- absorption.get(0);
 		return opacityLevel;
 	}
