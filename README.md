@@ -1,7 +1,7 @@
 # VEiP - Verification and Enforcement using Insertion for oPacity
 
 ##Introduction
-VEiP is a Java based toolbox for verification and enforcement of opacity properties formulated in Discrete Event Systems. The toolbox is still under active development. Its full version expects to provide the following functionality:
+VEiP is a Java based toolbox for verification and enforcement of opacity properties formulated in Discrete Event Systems. While some features are still under development, VEiP can be downloaded for features that are already implemented. The full version of VEiP expects to provide the following functionality:
 
 Logical models:
 * Verification of opacity
@@ -10,7 +10,7 @@ Logical models:
 
 Stochastic models:
 * Computation of the level of opacity
-* Synthesis of an optimal insertion function that maximizes opacity level (under developement)
+* Synthesis of an optimal insertion function that maximizes opacity level 
 
 ##Access, Modify, Build 
 To access, modify, build, and use the code, follow the instructions below:
