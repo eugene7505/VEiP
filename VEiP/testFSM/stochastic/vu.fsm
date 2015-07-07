@@ -1,0 +1,129 @@
+41	1
+
+(start0;start0)	1	3
+c	((start0;start0),c)	c	o
+f	((start0;start0),f)	c	o
+r	((start0;start0),r)	c	o
+
+((home10;home8),c)	0	0
+
+((home10;home5),f)	0	0
+
+((home5;home1),c)	0	0
+
+(work6;bank3)	1	1
+r	((work6;bank3),r)	c	o
+
+(food4;food4)	1	1
+r	((food4;food4),r)	c	o
+
+((start0;start0),r)	0	5
+	(home1;home1)	c	o
+fi	(home8;home1)	c	o
+ci	(home5;home1)	c	o
+firici	(home10;home1)	c	o
+cirifi	(home10;home1)	c	o
+
+(home10;home8)	1	1
+c	((home10;home8),c)	c	o
+
+(home10;home10)	1	0
+
+((home8;home8),c)	0	1
+	(food9;food9)	c	o
+
+((food9;hospital2),r)	0	1
+	(home10;home10)	c	o
+
+(food9;hospital2)	1	1
+r	((food9;hospital2),r)	c	o
+
+((home8;home1),c)	0	1
+	(food9;hospital2)	c	o
+
+((work6;work6),r)	0	1
+	(home10;home10)	c	o
+
+((work6;bank3),r)	0	1
+	(home10;home10)	c	o
+
+(work7;work7)	1	1
+r	((work7;work7),r)	c	o
+
+(work6;work7)	1	1
+r	((work6;work7),r)	c	o
+
+(food9;food9)	1	1
+r	((food9;food9),r)	c	o
+
+((start0;start0),c)	0	2
+	(food4;food4)	c	o
+firi	(food9;food4)	c	o
+
+((work7;work7),r)	0	2
+	(home8;home8)	c	o
+rici	(home10;home8)	c	o
+
+((home10;home1),c)	0	0
+
+((home1;home1),c)	0	0
+
+((home5;home5),f)	0	1
+	(work6;work6)	c	o
+
+((work6;work7),r)	0	1
+	(home10;home8)	c	o
+
+(home5;home1)	1	2
+c	((home5;home1),c)	c	o
+f	((home5;home1),f)	c	o
+
+((home1;home1),f)	0	0
+
+(home10;home5)	1	1
+f	((home10;home5),f)	c	o
+
+(home10;home1)	1	2
+c	((home10;home1),c)	c	o
+f	((home10;home1),f)	c	o
+
+(home5;home5)	1	1
+f	((home5;home5),f)	c	o
+
+(home8;home1)	1	2
+c	((home8;home1),c)	c	o
+f	((home8;home1),f)	c	o
+
+(home1;home1)	1	2
+c	((home1;home1),c)	c	o
+f	((home1;home1),f)	c	o
+
+((home5;home1),f)	0	1
+	(work6;bank3)	c	o
+
+(home8;home8)	1	1
+c	((home8;home8),c)	c	o
+
+(work6;work6)	1	1
+r	((work6;work6),r)	c	o
+
+(food9;food4)	1	1
+r	((food9;food4),r)	c	o
+
+((food9;food4),r)	0	1
+	(home10;home5)	c	o
+
+((food4;food4),r)	0	2
+	(home5;home5)	c	o
+rifi	(home10;home5)	c	o
+
+((home10;home1),f)	0	0
+
+((home8;home1),f)	0	0
+
+((food9;food9),r)	0	1
+	(home10;home10)	c	o
+
+((start0;start0),f)	0	2
+	(work7;work7)	c	o
+ciri	(work6;work7)	c	o
