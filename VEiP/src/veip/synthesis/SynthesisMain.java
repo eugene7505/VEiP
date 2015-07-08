@@ -88,7 +88,7 @@ public class SynthesisMain {
 				iaValuePair.ia.renameStates();
 				iaValuePair.ia.printIA();
 				iaValuePair.ia.exportFSM(iaFile);
-				System.out.println("optimal opacity level = " + (1 + iaValuePair.value));
+				System.out.println("optimal opacity level = " + (1 - iaValuePair.value));
 			}
 		}
 

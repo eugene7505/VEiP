@@ -75,7 +75,7 @@ public class StochasticSynthesisUtilities {
 
 		// construct mdp
 		HashMap<Event, HashMap<StatePair, Double>> transitionProbabilityMap = new HashMap<FSM.Event, HashMap<StatePair, Double>>();
-		HashMap<Event, HashMap<StatePair, Double>> rewardMap = new HashMap<FSM.Event, HashMap<StatePair, Double>>();
+		HashMap<Event, HashMap<StatePair, Double>> costMatrixMap = new HashMap<FSM.Event, HashMap<StatePair, Double>>();
 		HashMap<State, StateDistributionPair> stateDistributionMap = new HashMap<State, StochasticSynthesisUtilities.StateDistributionPair>();
 
 		StateDistributionPair initialPair = new StateDistributionPair(vu
@@ -87,7 +87,7 @@ public class StochasticSynthesisUtilities {
 		Stack<State> stack = new Stack<State>();
 		State reveal = mdp.addState("reveal");
 		Event noInsertion = mdp.addEvent("-");
-		rewardMap.put(noInsertion,
+		costMatrixMap.put(noInsertion,
 				new HashMap<StochasticSynthesisUtilities.StatePair, Double>());
 
 		stack.push(initialState);
@@ -129,8 +129,8 @@ public class StochasticSynthesisUtilities {
 				else {
 					if (gameState.getAllTransitions().size() == 0) {
 						state.addTransition(noInsertion, reveal);
-						rewardMap.get(noInsertion).put(
-								new StatePair(state, reveal), new Double(-1));
+						costMatrixMap.get(noInsertion).put(
+								new StatePair(state, reveal), new Double(1));
 					} else {
 						for (Map.Entry<Event, ArrayList<State>> transitionEntry : gameState
 								.getAllTransitions().entrySet()) {
@@ -144,11 +144,11 @@ public class StochasticSynthesisUtilities {
 							stateDistributionMap.put(nextYState, nextPair);
 							stack.push(nextYState);
 							state.addTransition(event, nextYState);
-							if (!rewardMap.containsKey(event))
-								rewardMap
+							if (!costMatrixMap.containsKey(event))
+								costMatrixMap
 										.put(event,
 												new HashMap<StochasticSynthesisUtilities.StatePair, Double>());
-							rewardMap.get(event).put(
+							costMatrixMap.get(event).put(
 									new StatePair(state, nextYState),
 									new Double(0));
 						}
@@ -164,7 +164,7 @@ public class StochasticSynthesisUtilities {
 
 		// construct transition matrix and reward matrix
 		mdp.constructTransitionProbabilityMatrixMap(transitionProbabilityMap);
-		mdp.constructRewardMatrixMap(rewardMap);
+		mdp.constructRewardMatrixMap(costMatrixMap);
 		mdp.updateNumberOfStates();
 		return mdp;
 	}

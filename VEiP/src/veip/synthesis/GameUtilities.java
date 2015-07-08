@@ -39,23 +39,23 @@ public final class GameUtilities {
 						newValue += transitionProbabilityMatrix.get(i, j)
 								* stateValueVector.get(j);
 					}
-				} else {// Z state
+				} else {// Z state, minimize cost to go
 					Iterator<Map.Entry<Event, ArrayList<State>>> iterator = stateList
 							.get(i).getAllTransitions().entrySet().iterator();
 					Map.Entry<Event, ArrayList<State>> entry = iterator.next();
 					int j = entry.getValue().get(0).getIndex();
 					Event event = entry.getKey();
-					double transitionReward = gameGraph.getZtoYMatrix(event, i,
+					double transitionCost = gameGraph.getZtoYMatrix(event, i,
 							j);
-					newValue = transitionReward + stateValueVector.get(j);
+					newValue = transitionCost + stateValueVector.get(j);
 					optimalEvent = event;
 					while (iterator.hasNext()) {
 						entry = iterator.next();
 						j = entry.getValue().get(0).getIndex();
 						event = entry.getKey();
-						transitionReward = gameGraph.getZtoYMatrix(event, i, j);
-						if (transitionReward + stateValueVector.get(j) > newValue) {
-							newValue = transitionReward
+						transitionCost = gameGraph.getZtoYMatrix(event, i, j);
+						if (transitionCost + stateValueVector.get(j) < newValue) {
+							newValue = transitionCost
 									+ stateValueVector.get(j);
 							optimalEvent = event;
 						}
