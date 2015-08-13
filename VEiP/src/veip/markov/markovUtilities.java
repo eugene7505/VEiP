@@ -87,18 +87,29 @@ public class markovUtilities {
 	}
 
 	public static void main(String args[]) {
-		SimpleMatrix matrix = new SimpleMatrix(3, 3);
-		matrix.set(0, 0.3);
-		matrix.set(1, 0.2);
-		matrix.set(2, 0.5);
-		matrix.set(4, 1);
-		matrix.set(6, 1);
-
-		SimpleMatrix unsafeStateVector = new SimpleMatrix(1, 3);
-		unsafeStateVector.set(1, 1);
-
-		SimpleMatrix abs = markovUtilities.computeAbsorptionProbabilities(
-				matrix, unsafeStateVector);
+		SimpleMatrix matrix = new SimpleMatrix(8, 8);
+		matrix.set(0, 1, 0.6);
+		matrix.set(0, 2, 0.2);
+		matrix.set(0, 3, 0.2);
+		matrix.set(1, 0, 0.3);
+		matrix.set(1, 7, 0.7);
+		matrix.set(2, 5, 0.7);
+		matrix.set(2, 6, 0.3);
+		matrix.set(3, 4, 0.6);
+		matrix.set(3, 5, 0.4);
+		matrix.set(4, 3, 1);
+		matrix.set(6, 1, 0.6);
+		matrix.set(6, 2, 0.2);
+		matrix.set(6, 3, 0.2);
+		matrix.set(7, 1, 1);
+		SimpleMatrix unsafeStateVector = new SimpleMatrix(8, 1);
+		unsafeStateVector.set(5, 1);
+		SimpleMatrix I = SimpleMatrix.identity(8);
+		matrix.print();
+		I.print();
+		unsafeStateVector.print();
+		SimpleMatrix abs = (I.minus(matrix)).solve(unsafeStateVector);
+		//SimpleMatrix abs = markovUtilities.computeAbsorptionProbabilities(matrix, unsafeStateVector);
 		abs.print();
 	}
 }

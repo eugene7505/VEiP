@@ -47,8 +47,8 @@ public class SynthesisMain {
 			System.out
 					.println("Usage: veip.synthesis.SynthesisMain [Options] <fsmFile/pfaFile> <IAFile>.");
 
-			automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/test2/G.fsm";
-			iaFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/test2/IA.fsm";
+			automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/dailyBehavior/office.fsm";
+			iaFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/dailyBehavior/officeIA.fsm";
 			option = GREEDY;
 
 			System.out.println("Run example:\nveip.synthesis.SynthesisMain -g "
@@ -71,7 +71,7 @@ public class SynthesisMain {
 		if (option == STOCHASTIC) {
 			PFA pfa = new PFA(automatonFile);
 			fsm = (FSM) pfa;
-			currentStateEstimator = new CurrentStateEstimator(fsm, false);
+			currentStateEstimator = new CurrentStateEstimator(fsm);
 			if (currentStateEstimator.isCurrentStateOpaque())
 				System.out.println("G is current-state opaque");
 			else if (!currentStateEstimator.isInitialStateSafe())
@@ -94,7 +94,7 @@ public class SynthesisMain {
 
 		else {
 			fsm = new FSM(automatonFile);
-			currentStateEstimator = new CurrentStateEstimator(fsm, false);
+			currentStateEstimator = new CurrentStateEstimator(fsm);
 			if (currentStateEstimator.isCurrentStateOpaque())
 				System.out.println("G is current-state opaque");
 			else if (!currentStateEstimator.isInitialStateSafe())
@@ -104,7 +104,11 @@ public class SynthesisMain {
 				InsertionAutomaton ia;
 				FSM estimator = new FSM(currentStateEstimator);
 				verifier = new Verifier(estimator);
+				//System.out.println("verifier");
+				//verifier.printVerifier();
 				unfoldedVerifier = new UnfoldedVerifier(verifier, true);
+				//System.out.println("unfoldedVerifier:");
+				//unfoldedVerifier.printUnfoldedVerifier();
 				ais = new AIS(unfoldedVerifier);
 
 				if (ais.getAisFSM().isEmptyFSM())
@@ -113,6 +117,7 @@ public class SynthesisMain {
 					switch (option) {
 					case GREEDY:
 						ia = SynthesisUtilities.greedySynthesis(ais);
+						ia.printIA();
 						break;
 					// TODO
 					case OPTIMAL:

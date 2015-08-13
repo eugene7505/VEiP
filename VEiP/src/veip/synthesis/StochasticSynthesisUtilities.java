@@ -166,6 +166,7 @@ public class StochasticSynthesisUtilities {
 		mdp.constructTransitionProbabilityMatrixMap(transitionProbabilityMap);
 		mdp.constructRewardMatrixMap(costMatrixMap);
 		mdp.updateNumberOfStates();
+		mdp.printFSM();
 		return mdp;
 	}
 
@@ -264,22 +265,27 @@ public class StochasticSynthesisUtilities {
 	public static GameStructure gameGraph;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		String automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/H.pfa";
+		String automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/H4.pfa";
 		PFA pfa = new PFA(automatonFile);
+		pfa.printPFA();
+		VerificationUtilities.isCurrentStateOpaque(pfa, true);
 		double opacityLevel = VerificationUtilities.computeOpacityLevel(pfa);
 		System.out.println("opacity level = " + opacityLevel);
+		System.out.println("Synthesizing an f_I that maximizes the opacity level:");
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
-				pfa, false);
+				pfa);
 		FSM estimator = new FSM(currentStateEstimator);
+		estimator.printFSM();
 		Verifier verifier = new Verifier(estimator);
+		verifier.printVerifier();
 		UnfoldedVerifier unfoldedVerifier = new UnfoldedVerifier(verifier, true);
 		FSM vu = unfoldedVerifier.getUnfoldedVerifierFSM();
 		vu.exportFSM("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/vu.fsm");
 
-		// check optimal synthesis, wrong IA
-		IAValuePair iaValuePair = optimalOpacityLevelSynthesis(vu, pfa);
-		iaValuePair.ia.renameStates();
-		iaValuePair.ia.printIA();
+		//TODO? check optimal synthesis, wrong IA
+		//IAValuePair iaValuePair = optimalOpacityLevelSynthesis(vu, pfa);
+//		iaValuePair.ia.renameStates();
+//		iaValuePair.ia.printIA();
 	}
 }
 

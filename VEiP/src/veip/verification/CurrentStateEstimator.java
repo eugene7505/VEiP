@@ -18,6 +18,14 @@ public class CurrentStateEstimator {
 	HashMap<String, EstimatorState> estimatorStateMap;
 	HashMap<String, Event> localEventMap;
 
+	public CurrentStateEstimator(FSM fsm) {
+		this.fsm = fsm;
+		buildCurrentStateEstimator_UR();
+	}
+
+	// This constructor is deprecated because we should not need observer
+	// without unobservable reach
+	@Deprecated
 	public CurrentStateEstimator(FSM fsm, boolean unobsReach) {
 		this.fsm = fsm;
 		if (unobsReach)
@@ -79,7 +87,10 @@ public class CurrentStateEstimator {
 		}
 	}
 
-	private void buildCurrentStateEstimator_UP() { //unobservable prefix: consider uo a for transition a 
+	@Deprecated
+	private void buildCurrentStateEstimator_UP() { // unobservable prefix:
+													// consider uo a for
+													// transition a
 		numberOfStates = 0;
 		estimatorStateMap = new HashMap<String, EstimatorState>();
 		localEventMap = new HashMap<String, FSM.Event>();

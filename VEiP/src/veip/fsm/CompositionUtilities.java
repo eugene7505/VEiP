@@ -259,13 +259,14 @@ public final class CompositionUtilities {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		PFA pfa = new PFA("testFSM/stochastic/H.pfa");
-		FSM obsfsm = new FSM(new CurrentStateEstimator(pfa, true));
-		PFA Hpfa = CompositionUtilities
-				.pairwiseParallelComposition(pfa, obsfsm);
+		FSM este = new FSM("testFSM/Office/Este.fsm");
+		FSM estd = new FSM("testFSM/Office/Estd.fsm");
+		FSM verifier = CompositionUtilities
+				.pairwiseParallelComposition(estd,este);
 
-		System.out.println("print Hpfa");
-		Hpfa.printPFA();
+		System.out.println("print verifier");
+		verifier.printFSM();
+		verifier.exportFSM("testFSM/Office/V.fsm");
 
 	}
 
