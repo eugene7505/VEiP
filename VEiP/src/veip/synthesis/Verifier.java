@@ -6,15 +6,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import veip.fsm.FSM;
 import veip.fsm.CompositionUtilities;
+import veip.fsm.Event;
+import veip.fsm.FSM;
 import veip.fsm.State;
-import veip.fsm.FSM.Event;
 
 public class Verifier {
-
-	// TODO perhaps we could implement the verifier for both insertion and
-	// replacement: buildInsertionVerifier(), buildReplacementVerifier
 
 	private FSM estimator;
 	private FSM safeEstimator;
@@ -71,7 +68,7 @@ public class Verifier {
 				newTransitions.put(transitionEntry.getKey(),
 						transitionEntry.getValue());
 				Event insertedEvent = safeEstimator.addEvent(transitionEntry
-						.getKey().getName().concat("i"), true, true);
+						.getKey().getName().concat("i"), true);
 				insertedEvent.setInserted(true);
 				newTransitions.put(insertedEvent, transitionEntry.getValue());
 			}
@@ -95,7 +92,7 @@ public class Verifier {
 			for (Map.Entry<String, Event> eventEntry : estimator
 					.getLocalEventMap().entrySet()) {
 				Event insertedEvent = insertionEstimator.addEvent(eventEntry
-						.getKey().concat("i"), true, true);
+						.getKey().concat("i"), true);
 				insertedEvent.setInserted(true);
 				state.addTransition(insertedEvent, state);
 			}

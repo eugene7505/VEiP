@@ -13,52 +13,6 @@ import veip.verification.EstimatorState;
 
 public class FSM {
 
-	public static class Event {
-		String name;
-		private boolean observable = true;
-		private boolean controllable = true;
-		private boolean inserted = false;
-		
-		public Event(String eventName) {
-			name = eventName;
-		}
-
-		public Event(String eventName, boolean isControllable,
-				boolean isObservable) {
-			name = eventName;
-			setObservable(isObservable);
-			setControllable(isControllable);
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public boolean isControllable() {
-			return controllable;
-		}
-
-		public void setControllable(boolean controllable) {
-			this.controllable = controllable;
-		}
-
-		public boolean isObservable() {
-			return observable;
-		}
-
-		public boolean isInserted() {
-			return inserted;
-		}
-
-		public void setObservable(boolean observable) {
-			this.observable = observable;
-		}
-
-		public void setInserted(boolean inserted) {
-			this.inserted = inserted;
-		}
-	}
-
 	protected int stateCounter = 0;
 	protected String file = new String("");
 	protected int numberOfStates;
@@ -134,10 +88,8 @@ public class FSM {
 				String eventName = s.next();
 				String nextStateName = s.next();
 				State nextState = addState(nextStateName);
-				String c = s.next();
 				String o = s.next();
-				Event event = addEvent(eventName, (c.compareTo("c") == 0),
-						(o.compareTo("o") == 0));
+				Event event = addEvent(eventName, (o.compareTo("o") == 0));
 				addObsUnobsEventMap(event);
 				state.addTransition(event, nextState);
 			}
@@ -311,26 +263,21 @@ public class FSM {
 	/*
 	 * TODO: can we throw an error when the con/obs attributes are inconsistent?
 	 */
-	public Event addEvent(String eventName, boolean controllable,
-			boolean observable) {
+	public Event addEvent(String eventName, boolean observable) {
 		Event event;
 		if (!globalEventMap.containsKey(eventName)) {
-			globalEventMap.put(eventName, new Event(eventName, controllable,
-					observable));
+			globalEventMap.put(eventName, new Event(eventName, observable));
 			event = globalEventMap.get(eventName);
 			addObsUnobsEventMap(event);
 			localEventMap.put(eventName, event);
 		} else {
 			event = globalEventMap.get(eventName);
-			if (event.isControllable() != controllable
-					|| event.isObservable() != observable) {
+			if (event.isObservable() != observable) {
 				System.out
 						.println("event "
 								+ event.getName()
 								+ " has inconsistent controllable/observable attributes. Overwrite the attributes to "
-								+ (controllable ? "c" : "uc") + ","
 								+ (observable ? "o" : "uo"));
-				event.setControllable(controllable);
 				event.setObservable(observable);
 				addObsUnobsEventMap(event);
 			}
@@ -415,7 +362,6 @@ public class FSM {
 				for (int j = 0; j < nextStateList.size(); j++) {
 					System.out.println(event.name + "\t"
 							+ nextStateList.get(j).name + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}
@@ -435,9 +381,8 @@ public class FSM {
 					ArrayList<State> nextStateList = transitionEntry.getValue();
 					for (int j = 0; j < nextStateList.size(); j++) {
 						System.out.println(event.name + "\t"
-								+ nextStateList.get(j).name + "\t"
-								+ ((event.isControllable()) ? "c" : "uc")
-								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
+								+ nextStateList.get(j).name + "\t" + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
 			}
@@ -459,7 +404,6 @@ public class FSM {
 				for (int j = 0; j < nextStateList.size(); j++) {
 					fileWriter.println(event.name + "\t"
 							+ nextStateList.get(j).name + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}
@@ -479,9 +423,8 @@ public class FSM {
 					ArrayList<State> nextStateList = transitionEntry.getValue();
 					for (int j = 0; j < nextStateList.size(); j++) {
 						fileWriter.println(event.name + "\t"
-								+ nextStateList.get(j).name + "\t"
-								+ ((event.isControllable()) ? "c" : "uc")
-								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
+								+ nextStateList.get(j).name + "\t" + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
 			}

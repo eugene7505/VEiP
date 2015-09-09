@@ -1,7 +1,5 @@
 package veip.synthesis;
 
-import java.io.FileNotFoundException;
-
 import veip.fsm.FSM;
 
 public class AIS {

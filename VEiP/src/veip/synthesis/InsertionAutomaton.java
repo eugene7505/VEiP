@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import veip.fsm.Event;
 import veip.fsm.FSM;
 import veip.fsm.State;
-import veip.fsm.FSM.Event;
 
 public class InsertionAutomaton extends FSM {
 
@@ -21,10 +21,10 @@ public class InsertionAutomaton extends FSM {
 
 	public void addTransitionOuput(State state, Event event, Event outputEvent) {
 		if (!transitionOutputMap.containsKey(state)) {
-			transitionOutputMap.put(state, new HashMap<FSM.Event, FSM.Event>());
+			transitionOutputMap.put(state, new HashMap<Event, Event>());
 			transitionOutputMap.get(state).put(event, outputEvent);
 		} else {
-			HashMap<FSM.Event, FSM.Event> transitionOutput = transitionOutputMap
+			HashMap<Event, Event> transitionOutput = transitionOutputMap
 					.get(state);
 			if (transitionOutput.containsKey(event)) {
 				if (transitionOutput.get(event) != outputEvent)
@@ -73,7 +73,6 @@ public class InsertionAutomaton extends FSM {
 					System.out.println(event.getName() + "/"
 							+ insertedStringEvent.getName() + "\t"
 							+ nextStateList.get(j).getName() + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}
@@ -96,9 +95,8 @@ public class InsertionAutomaton extends FSM {
 					for (int j = 0; j < nextStateList.size(); j++) {
 						System.out.println(event.getName() + "/"
 								+ insertedStringEvent.getName() + "\t"
-								+ nextStateList.get(j).getName() + "\t"
-								+ ((event.isControllable()) ? "c" : "uc")
-								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
+								+ nextStateList.get(j).getName() + "\t" + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
 			}
@@ -125,7 +123,6 @@ public class InsertionAutomaton extends FSM {
 					fileWriter.println(event.getName() + "/"
 							+ insertedStringEvent.getName() + "\t"
 							+ nextStateList.get(j).getName() + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}
@@ -148,9 +145,8 @@ public class InsertionAutomaton extends FSM {
 					for (int j = 0; j < nextStateList.size(); j++) {
 						fileWriter.println(event.getName() + "/"
 								+ insertedStringEvent.getName() + "\t"
-								+ nextStateList.get(j).getName() + "\t"
-								+ ((event.isControllable()) ? "c" : "uc")
-								+ "\t" + ((event.isObservable()) ? "o" : "uo"));
+								+ nextStateList.get(j).getName() + "\t" + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
 			}

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import veip.fsm.Event;
 import veip.fsm.FSM;
-import veip.fsm.FSM.Event;
 import veip.fsm.State;
 
 public class CurrentStateEstimator {
@@ -43,7 +43,7 @@ public class CurrentStateEstimator {
 	private void buildCurrentStateEstimator_UR() {
 		numberOfStates = 0;
 		estimatorStateMap = new HashMap<String, EstimatorState>();
-		localEventMap = new HashMap<String, FSM.Event>();
+		localEventMap = new HashMap<String, Event>();
 
 		ArrayList<State> initialStateWithUnobservableReach = unobserverbleReach(fsm
 				.getInitialStateList());
@@ -93,7 +93,7 @@ public class CurrentStateEstimator {
 													// transition a
 		numberOfStates = 0;
 		estimatorStateMap = new HashMap<String, EstimatorState>();
-		localEventMap = new HashMap<String, FSM.Event>();
+		localEventMap = new HashMap<String, Event>();
 
 		ArrayList<State> initialState = fsm.getInitialStateList();
 		initialEstimate = addEstimate(initialState);
@@ -260,7 +260,6 @@ public class CurrentStateEstimator {
 			else {
 				System.out.println(event.getName() + "\t"
 						+ nextEstimateList.get(0).getName() + "\t"
-						+ ((event.isControllable()) ? "c" : "uc") + "\t"
 						+ ((event.isObservable()) ? "o" : "uo"));
 			}
 		}
@@ -283,7 +282,6 @@ public class CurrentStateEstimator {
 				else {
 					System.out.println(event.getName() + "\t"
 							+ nextEstimateList.get(0).getName() + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo"));
 				}
 			}

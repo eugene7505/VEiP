@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Stack;
 
-import veip.fsm.FSM.Event;
-import veip.verification.CurrentStateEstimator;
-
 public final class CompositionUtilities {
 	private CompositionUtilities() {
 	}
@@ -259,14 +256,14 @@ public final class CompositionUtilities {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FSM este = new FSM("testFSM/Office/Este.fsm");
-		FSM estd = new FSM("testFSM/Office/Estd.fsm");
+		FSM este = new FSM("testFSM/Ge.fsm");
+		FSM estd = new FSM("testFSM/H.fsm");
 		FSM verifier = CompositionUtilities
-				.pairwiseParallelComposition(estd,este);
+				.pairwiseParallelComposition(este,estd);
 
 		System.out.println("print verifier");
 		verifier.printFSM();
-		verifier.exportFSM("testFSM/Office/V.fsm");
+		verifier.exportFSM("testFSM/V.fsm");
 
 	}
 

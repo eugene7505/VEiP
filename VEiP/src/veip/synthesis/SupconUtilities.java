@@ -1,6 +1,5 @@
 package veip.synthesis;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,7 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import veip.fsm.FSM;
-import veip.fsm.FSM.Event;
+import veip.fsm.Event;
 import veip.fsm.State;
 
 public final class SupconUtilities {

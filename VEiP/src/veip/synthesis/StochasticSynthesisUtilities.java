@@ -12,7 +12,7 @@ import veip.fsm.FSM;
 import veip.fsm.GameStructure;
 import veip.fsm.PFA;
 import veip.fsm.State;
-import veip.fsm.FSM.Event;
+import veip.fsm.Event;
 import veip.verification.CurrentStateEstimator;
 import veip.verification.VerificationUtilities;
 
@@ -74,8 +74,8 @@ public class StochasticSynthesisUtilities {
 		}
 
 		// construct mdp
-		HashMap<Event, HashMap<StatePair, Double>> transitionProbabilityMap = new HashMap<FSM.Event, HashMap<StatePair, Double>>();
-		HashMap<Event, HashMap<StatePair, Double>> costMatrixMap = new HashMap<FSM.Event, HashMap<StatePair, Double>>();
+		HashMap<Event, HashMap<StatePair, Double>> transitionProbabilityMap = new HashMap<Event, HashMap<StatePair, Double>>();
+		HashMap<Event, HashMap<StatePair, Double>> costMatrixMap = new HashMap<Event, HashMap<StatePair, Double>>();
 		HashMap<State, StateDistributionPair> stateDistributionMap = new HashMap<State, StochasticSynthesisUtilities.StateDistributionPair>();
 
 		StateDistributionPair initialPair = new StateDistributionPair(vu

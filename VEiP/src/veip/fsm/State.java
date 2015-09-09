@@ -11,8 +11,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import veip.fsm.FSM.Event;
-
 public class State {
 
 	public State() {

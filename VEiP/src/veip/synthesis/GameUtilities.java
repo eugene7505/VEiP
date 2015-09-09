@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.ejml.simple.SimpleMatrix;
 
+import veip.fsm.Event;
 import veip.fsm.GameStructure;
-import veip.fsm.FSM.Event;
 import veip.fsm.State;
 
 public final class GameUtilities {

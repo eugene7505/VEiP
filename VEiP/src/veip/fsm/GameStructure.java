@@ -13,8 +13,8 @@ public class GameStructure extends FSM {
 	public GameStructure() {
 		super();
 		initialStateList = new ArrayList<State>(1);
-		ytoZWeightMatrixMap = new HashMap<FSM.Event, SimpleMatrix>();
-		ztoYWeightMatrixMap = new HashMap<FSM.Event, SimpleMatrix>();
+		ytoZWeightMatrixMap = new HashMap<Event, SimpleMatrix>();
+		ztoYWeightMatrixMap = new HashMap<Event, SimpleMatrix>();
 		stateValueVector = new SimpleMatrix();
 		stateList = new ArrayList<State>();
 	}
@@ -109,7 +109,7 @@ public class GameStructure extends FSM {
 		optimalActoins.set(i, event);
 	}
 	public void initializeOptimalActions(int n){
-		optimalActoins = new ArrayList<FSM.Event>(n);
+		optimalActoins = new ArrayList<Event>(n);
 		for (int i = 0; i < n; i++){
 			optimalActoins.add(null);
 		}

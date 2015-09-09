@@ -3,8 +3,6 @@ package veip.fsm;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import veip.fsm.FSM.Event;
 import veip.synthesis.Verifier;
 
 public final class GraphUtilities {

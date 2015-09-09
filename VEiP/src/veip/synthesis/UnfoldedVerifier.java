@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import veip.fsm.Event;
 import veip.fsm.FSM;
-import veip.fsm.FSM.Event;
 import veip.fsm.GraphUtilities;
 import veip.fsm.State;
 
@@ -83,8 +83,7 @@ public class UnfoldedVerifier {
 		for (Map.Entry<Event, ArrayList<State>> transitionEntry : estimate
 				.getAllTransitions().entrySet()) {
 			Event event = unfoldedVerifier.addEvent(transitionEntry.getKey()
-					.getName(), transitionEntry.getKey().isControllable(),
-					transitionEntry.getKey().isObservable());
+					.getName(), transitionEntry.getKey().isObservable());
 			State nextZstate = unfoldedVerifier.addState(
 					generateZStateName(ystate, event), false, false);
 			stateStack.push(nextZstate);
@@ -114,7 +113,7 @@ public class UnfoldedVerifier {
 					stateStack.push(nextYState);
 					addYtoMStateMap(nextYState, nextMStates.get(0));
 					Event mprimEvent = unfoldedVerifier.addEvent(
-							mprimeState.getName(), true, true);
+							mprimeState.getName(), true);
 					zstate.addTransition(mprimEvent, nextYState);
 				}
 			} else {
@@ -132,7 +131,7 @@ public class UnfoldedVerifier {
 					stateStack.push(nextYState);
 					addYtoMStateMap(nextYState, nextMStates.get(0));
 					Event insertedStringEvent = unfoldedVerifier.addEvent(
-							insertedString, true, true);
+							insertedString, true);
 					zstate.addTransition(insertedStringEvent, nextYState);
 				}
 			}

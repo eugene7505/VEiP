@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import veip.fsm.FSM;
-import veip.fsm.FSM.Event;
+import veip.fsm.Event;
 import veip.fsm.State;
 
 public final class SynthesisUtilities {
@@ -49,7 +49,7 @@ public final class SynthesisUtilities {
 				continue;
 			State iaState = ia.addState(ystate.getName(), ystate.isInitial(),
 					true);
-			for (HashMap.Entry<FSM.Event, ArrayList<State>> transitionEntry : ystate
+			for (HashMap.Entry<Event, ArrayList<State>> transitionEntry : ystate
 					.getAllTransitions().entrySet()) {
 				Event event = transitionEntry.getKey();
 				State zstate = transitionEntry.getValue().get(0);

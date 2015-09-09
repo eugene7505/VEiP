@@ -5,12 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 
 import org.ejml.simple.SimpleMatrix;
-
-import veip.fsm.FSM.Event;
 
 /*
  * stateList is added to index states
@@ -25,13 +22,14 @@ public class PFA extends FSM {
 		stateList = new ArrayList<State>(numberOfStates);
 	}
 
-	/*This constructor builds a PFA from a given FSM. 
-	 * By default, initial probability and transition probability are equally probable among all states
-	 * or all outgoing transitions
+	/*
+	 * This constructor builds a PFA from a given FSM. By default, initial
+	 * probability and transition probability are equally probable among all
+	 * states or all outgoing transitions
 	 */
 	public PFA(FSM fsm) {
 		super(fsm);
-		// TODO every outgoing transition is equally likely 
+		// TODO every outgoing transition is equally likely
 		initialDistribution = new SimpleMatrix(1, numberOfStates);
 		numberOfInitialState = fsm.numberOfInitialState;
 		eventMatrixMap = new HashMap<Event, SimpleMatrix>();
@@ -45,9 +43,9 @@ public class PFA extends FSM {
 			State state = stateEntry.getValue();
 			stateList.add(state.index, state);
 		}
-		for (int i = 0; i < fsm.initialStateList.size(); i++){
+		for (int i = 0; i < fsm.initialStateList.size(); i++) {
 			int stateIndex = fsm.initialStateList.get(i).getIndex();
-			initialDistribution.set(stateIndex, 1/numberOfInitialState);
+			initialDistribution.set(stateIndex, 1 / numberOfInitialState);
 		}
 	}
 
@@ -81,10 +79,8 @@ public class PFA extends FSM {
 				State nextState = addState(nextStateName);
 				int nsindex = nextState.getIndex();
 				assert (nsindex >= 0 && nsindex < numberOfStates);
-				String c = s.next();
 				String o = s.next();
-				Event event = addEvent(eventName, (c.compareTo("c") == 0),
-						(o.compareTo("o") == 0));
+				Event event = addEvent(eventName, (o.compareTo("o") == 0));
 				addObsUnobsEventMap(event);
 				state.addTransition(event, nextState);
 				double p = s.nextDouble();
@@ -124,12 +120,10 @@ public class PFA extends FSM {
 		eventMatrixMap = new HashMap<Event, SimpleMatrix>();
 		for (int i = 0; i < hmm.numberOfObservations; i++) {
 			String eventName = hmm.observationList.get(i);
-			Event event = addEvent(eventName, true, true);
+			Event event = addEvent(eventName, true);
 			eventMatrixMap.put(event, new SimpleMatrix(numberOfStates,
 					numberOfStates));
 		}
-		
-		
 
 		for (int i = 0; i < numberOfStates; i++) {
 			State state = stateList.get(i);
@@ -189,6 +183,7 @@ public class PFA extends FSM {
 		}
 		return state;
 	}
+
 	@Override
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
@@ -231,7 +226,7 @@ public class PFA extends FSM {
 			System.out.println("PFA does not have Event " + e + ". Wrong!");
 		return eventMatrixMap.get(e);
 	}
-	
+
 	public SimpleMatrix getTransitionMatrix() {
 		SimpleMatrix transitionMatrix = new SimpleMatrix(numberOfStates,
 				numberOfStates);
@@ -274,7 +269,6 @@ public class PFA extends FSM {
 				for (int j = 0; j < nextStateList.size(); j++) {
 					State nState = nextStateList.get(j);
 					System.out.println(event.name + "\t" + nState.name + "\t"
-							+ ((event.isControllable()) ? "c" : "uc") + "\t"
 							+ ((event.isObservable()) ? "o" : "uo") + "\t"
 							+ (getEventMatrix(event, i, nState.getIndex())));
 				}
