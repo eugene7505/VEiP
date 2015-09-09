@@ -1,24 +1,24 @@
 6	1
 
 0	1	2
-a/a	4	c	o
-b/aib	1	c	o
+a/a	4	o
+b/aib	1	o
 
 1	1	1
-b/b	2	c	o
+b/b	2	o
 
 2	1	2
-a/a	3	c	o
-b/b	1	c	o
+a/a	3	o
+b/b	1	o
 
 3	1	2
-a/a	5	c	o
-b/b	5	c	o
+a/a	5	o
+b/b	5	o
 
 4	1	2
-a/a	5	c	o
-b/b	5	c	o
+a/a	5	o
+b/b	5	o
 
 5	1	2
-a/a	5	c	o
-b/b	5	c	o
+a/a	5	o
+b/b	5	o

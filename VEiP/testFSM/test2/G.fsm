@@ -1,20 +1,20 @@
 5	1
 
 0	1	2
-b	1	c	o
-a	2	c	o
+b	1	o
+a	2	o
 
 1	0	1
-b	4	c	o
+b	4	o
 
 2	1	2
-d	3	c	uo
-c	4	c	uo
+d	3	uo
+4	uo
 
 3	1	2
-b	2	c	o
-a	1	c	o
+b	2	o
+a	1	o
 
 4	1	2
-c	0	c	uo
-a	3	c	o
+0	uo
+a	3	o

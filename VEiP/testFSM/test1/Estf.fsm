@@ -1,45 +1,45 @@
 9
 
 0	1	4
-1	1	c	o
-2	2	c	o
-1i	0	c	uo
-2i	0	c	uo
+1	1	o
+2	2	o
+1i	0	uo
+2i	0	uo
 
 1	1	5
-1	4	c	o
-2	6	c	o
-3	3	c	o
-1i	1	c	uo
-2i	1	c	uo
+1	4	o
+2	6	o
+3	3	o
+1i	1	uo
+2i	1	uo
 
 2	1	3
-1	7	c	o
-1i	2	c	uo
-2i	2	c	uo
+1	7	o
+1i	2	uo
+2i	2	uo
 
 3	0	2
-1i	3	c	uo
-2i	3	c	uo
+1i	3	uo
+2i	3	uo
 
 4	1	3
-3	5	c	o
-1i	4	c	uo
-2i	4	c	uo
+3	5	o
+1i	4	uo
+2i	4	uo
 
 5	1	2
-1i	5	c	uo
-2i	5	c	uo
+1i	5	uo
+2i	5	uo
 
 6	0	2
-1i	6	c	uo
-2i	6	c	uo
+1i	6	uo
+2i	6	uo
 
 7	1	3
-2	8	c	o
-1i	7	c	uo
-2i	7	c	uo
+2	8	o
+1i	7	uo
+2i	7	uo
 
 8	1	2
-1i	8	c	uo
-2i	8	c	uo
+1i	8	uo
+2i	8	uo
