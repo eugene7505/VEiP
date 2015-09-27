@@ -1,63 +1,83 @@
 package veip.fsm;
 
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.ejml.simple.SimpleMatrix;
-
-import veip.synthesis.StochasticSynthesisUtilities.StatePair;
 
 public class GameStructure extends FSM {
 
 	public GameStructure() {
 		super();
 		initialStateList = new ArrayList<State>(1);
-		ytoZWeightMatrixMap = new HashMap<Event, SimpleMatrix>();
-		ztoYWeightMatrixMap = new HashMap<Event, SimpleMatrix>();
+		weightMatrixMap = new HashMap<Event, SimpleMatrix>();
 		stateValueVector = new SimpleMatrix();
 		stateList = new ArrayList<State>();
+		// eventSet is the event set to the edit function (i.e., the set of system's output event)
+		eventSet = new HashSet<Event>();
 	}
 
-	public void constructTransitionProbabilityMatrixMap(
-			HashMap<Event, HashMap<StatePair, Double>> transitionMatrix) {
-		// System.out.println("TransitionProbabilityMatrix");
-		for (Map.Entry<Event, HashMap<StatePair, Double>> mapEntry : transitionMatrix
-				.entrySet()) {
-			Event event = mapEntry.getKey();
-			// System.out.println(event.name);
-			ytoZWeightMatrixMap.put(event, new SimpleMatrix(
-					numberOfStates, numberOfStates));
-			for (Map.Entry<StatePair, Double> matrixEntry : mapEntry.getValue()
-					.entrySet()) {
-				StatePair pair = matrixEntry.getKey();
-				ytoZWeightMatrixMap.get(event).set(pair.first.index,
-						pair.second.index, matrixEntry.getValue());
-			}
-			// transitionProbabilityMatrixMap.get(event).print();
-		}
+	public void initiateEventSet(HashMap<String, Event> eventMap) {
+		for (Map.Entry<String, Event> entry : eventMap.entrySet())
+			eventSet.add(entry.getValue());
 	}
 
-	public void constructRewardMatrixMap(
-			HashMap<Event, HashMap<StatePair, Double>> rewardMatrix) {
-		for (Map.Entry<Event, HashMap<StatePair, Double>> mapEntry : rewardMatrix
+	public HashSet<Event> getEventSet(){
+		return eventSet;
+	}
+	
+	public void constructYtoZWeightMatrixMap(
+			HashMap<Event, HashMap<StatePair, Double>> ytoZMatrix) {
+		// System.out.println("YtoZWeightMatrixMap");
+		for (Map.Entry<Event, HashMap<StatePair, Double>> mapEntry : ytoZMatrix
 				.entrySet()) {
 			Event event = mapEntry.getKey();
-			// System.out.println(event.name);
-			ztoYWeightMatrixMap.put(event, new SimpleMatrix(numberOfStates,
+			weightMatrixMap.put(event, new SimpleMatrix(numberOfStates,
 					numberOfStates));
 			for (Map.Entry<StatePair, Double> matrixEntry : mapEntry.getValue()
 					.entrySet()) {
 				StatePair pair = matrixEntry.getKey();
-				ztoYWeightMatrixMap.get(event).set(pair.first.index,
+				weightMatrixMap.get(event).set(pair.first.index,
 						pair.second.index, matrixEntry.getValue());
 			}
-			// rewardMatrixMap.get(event).print();
+			// ytoZWeightMatrixMap.get(event).print();
 		}
 	}
 
+	public void constructZtoYWeightMatrixMap(
+			HashMap<Event, HashMap<StatePair, Double>> ztoYMatrix) {
+		// System.out.println("ZtoYWeightMatrixMap");
+		for (Map.Entry<Event, HashMap<StatePair, Double>> mapEntry : ztoYMatrix
+				.entrySet()) {
+			Event event = mapEntry.getKey();
+			// System.out.println(event.name);
+			weightMatrixMap.put(event, new SimpleMatrix(numberOfStates,
+					numberOfStates));
+			for (Map.Entry<StatePair, Double> matrixEntry : mapEntry.getValue()
+					.entrySet()) {
+				StatePair pair = matrixEntry.getKey();
+				weightMatrixMap.get(event).set(pair.first.index,
+						pair.second.index, matrixEntry.getValue());
+				/*
+				 * if(!matrixEntry.getValue().equals(0))
+				 * System.out.println(matrixEntry.getValue());
+				 */
+			}
+		}
+	}
+
+	public void setWeightMatrix(Event e, SimpleMatrix weightMatrix) {
+		if (weightMatrixMap.containsKey(e))
+			System.out.println("weightMatrix for event " + e.getName()
+					+ "already exist. OVERRIDE!");
+		weightMatrixMap.put(e, weightMatrix);
+	}
+
 	@Override
-	public State addState(String stateName) {
+	public State createState(String stateName) {
 		if (!stateMap.containsKey(stateName)) {
 			stateMap.put(stateName, new State(stateName));
 		}
@@ -67,17 +87,20 @@ public class GameStructure extends FSM {
 			assert (stateCounter == stateList.size());
 			stateList.add(state);
 			stateCounter++;
+			updateNumberOfStates();
 		}
 		return state;
 	}
 
 	@Override
-	public State addState(String stateName, boolean isInitial,
+	public State createState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
 			State state = new State(stateName, isInitial, isNonsecret);
-			if (isInitial)
+			if (isInitial) {
 				initialStateList.add(state);
+				updateNumberOfInitialStates();
+			}
 			stateMap.put(stateName, state);
 		}
 		State state = stateMap.get(stateName);
@@ -86,6 +109,7 @@ public class GameStructure extends FSM {
 			assert (stateCounter == stateList.size());
 			stateList.add(state);
 			stateCounter++;
+			updateNumberOfStates();
 		}
 		return state;
 	}
@@ -94,49 +118,68 @@ public class GameStructure extends FSM {
 		optimalActoins = actions;
 	}
 
-	public void setValues(SimpleMatrix values) {
+	public void setValueVector(SimpleMatrix values) {
 		stateValueVector = values;
+	}
+
+	public void setValue(int index, double value) {
+		stateValueVector.set(index, value);
+	}
+
+	public SimpleMatrix getValueVector() {
+		return stateValueVector;
 	}
 
 	public Double getValue(State state) {
 		return stateValueVector.get(state.getIndex());
 	}
 
+	public Double getValue(int index) {
+		return stateValueVector.get(index);
+	}
+
 	public Event getOptimalAction(State state) {
 		return optimalActoins.get(state.getIndex());
 	}
-	public void setOptimalAction (int i, Event event){
+
+	public void setOptimalAction(int i, Event event) {
 		optimalActoins.set(i, event);
 	}
-	public void initializeOptimalActions(int n){
-		optimalActoins = new ArrayList<Event>(n);
-		for (int i = 0; i < n; i++){
+
+	public void initializeOptimalActions() {
+		optimalActoins = new ArrayList<Event>(numberOfStates);
+		for (int i = 0; i < numberOfStates; i++) {
 			optimalActoins.add(null);
 		}
 	}
-	
-	public HashMap<Event, SimpleMatrix> getYtoZMatrixMap() {
-		return ytoZWeightMatrixMap;
+
+	public HashMap<Event, SimpleMatrix> getMatrixMap() {
+		return weightMatrixMap;
 	}
 
-	public SimpleMatrix getZtoYMatrix(Event event) {
-		return ztoYWeightMatrixMap.get(event);
+	public SimpleMatrix getMatrix(Event event) {
+		return weightMatrixMap.get(event);
 	}
 
-	public double getZtoYMatrix(Event event, int i, int j) {
-		return ztoYWeightMatrixMap.get(event).get(i, j);
+	public double getMatrixEntry(Event event, int i, int j) {
+		return weightMatrixMap.get(event).get(i, j);
+	}
+
+	public void setMatrixEntry(Event event, int i, int j, double value) {
+		weightMatrixMap.get(event).set(i, j, value);
 	}
 
 	public ArrayList<State> getStateList() {
 		return stateList;
 	}
-	public State getState(int i){
+
+	public State getState(int i) {
 		return stateList.get(i);
 	}
 
-	private HashMap<Event, SimpleMatrix> ytoZWeightMatrixMap;
-	private HashMap<Event, SimpleMatrix> ztoYWeightMatrixMap;
+	private HashMap<Event, SimpleMatrix> weightMatrixMap;
 	private SimpleMatrix stateValueVector;
 	private ArrayList<Event> optimalActoins;
 	private ArrayList<State> stateList;
+	private HashSet<Event> eventSet;
 }

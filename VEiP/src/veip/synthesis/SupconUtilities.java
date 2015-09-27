@@ -105,7 +105,7 @@ public final class SupconUtilities {
 				State supconState = stateStack.pop();
 				if (supconState.flagged)
 					continue;
-				State state = resultFSM.addState(supconState.getName(),
+				State state = resultFSM.createState(supconState.getName(),
 						supconState.isInitial(), supconState.isNonsecret());
 				for (HashMap.Entry<Event, ArrayList<State>> transitionEntry : supconState
 						.getAllTransitions().entrySet()) {
@@ -116,11 +116,11 @@ public final class SupconUtilities {
 						State supconNextState = transitionEntry.getValue().get(
 								0);
 						stateStack.add(supconNextState);
-						State nextState = resultFSM.addState(
+						State nextState = resultFSM.createState(
 								supconNextState.getName(),
 								supconNextState.isInitial(),
 								supconNextState.isMarked());
-						state.addTransition(transitionEntry.getKey(), nextState);
+						state.createTransition(transitionEntry.getKey(), nextState);
 					}
 				}
 				state.updateNumberOfTransitions();

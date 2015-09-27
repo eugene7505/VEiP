@@ -78,7 +78,7 @@ public class CurrentStateEstimator {
 				nextStates = unobserverbleReach(nextStates);
 				if (eventEnabled == true) {
 					EstimatorState nextEstimate = addEstimate(nextStates);
-					estimate.addTransition(event, nextEstimate);
+					estimate.createTransition(event, nextEstimate);
 					stack.push(nextEstimate);
 				}
 			}
@@ -127,7 +127,7 @@ public class CurrentStateEstimator {
 				}
 				if (eventEnabled == true) {
 					EstimatorState nextEstimate = addEstimate(nextStates);
-					estimate.addTransition(event, nextEstimate);
+					estimate.createTransition(event, nextEstimate);
 					stack.push(nextEstimate);
 				}
 			}

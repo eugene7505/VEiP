@@ -1,14 +1,10 @@
-package veip.synthesis;
+package veip.fsm;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import veip.fsm.Event;
-import veip.fsm.FSM;
-import veip.fsm.State;
 
 public class InsertionAutomaton extends FSM {
 
@@ -104,26 +100,41 @@ public class InsertionAutomaton extends FSM {
 	}
 
 	@Override
-	public void exportFSM(String outFileName) throws FileNotFoundException {
+	public void exportFSM(String outFileName, boolean renumberStates)
+			throws FileNotFoundException {
 		PrintWriter fileWriter = new PrintWriter(outFileName);
 		fileWriter.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);
 			fileWriter.println();
-			fileWriter.println(state.getName() + "\t"
-					+ ((state.isNonsecret()) ? 1 : 0) + "\t"
-					+ state.getNumberOfTransitions());
+			if (renumberStates)
+				fileWriter.println(state.index + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
+			else
+				fileWriter.println(state.name + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state
 					.getAllTransitions().entrySet()) {
 				Event event = transitionEntry.getKey();
 				Event insertedStringEvent = transitionOutputMap.get(state).get(
 						event);
 				ArrayList<State> nextStateList = transitionEntry.getValue();
-				for (int j = 0; j < nextStateList.size(); j++) {
-					fileWriter.println(event.getName() + "/"
-							+ insertedStringEvent.getName() + "\t"
-							+ nextStateList.get(j).getName() + "\t"
-							+ ((event.isObservable()) ? "o" : "uo"));
+				if (renumberStates) {
+					for (int j = 0; j < nextStateList.size(); j++) {
+						fileWriter.println(event.name + "/"
+								+ insertedStringEvent.getName() + "\t"
+								+ nextStateList.get(j).index + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
+					}
+				} else {
+					for (int j = 0; j < nextStateList.size(); j++) {
+						fileWriter.println(event.name + "/"
+								+ insertedStringEvent.getName() + "\t"
+								+ nextStateList.get(j).getName() + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
+					}
 				}
 			}
 		}
@@ -133,20 +144,34 @@ public class InsertionAutomaton extends FSM {
 				continue;
 			else {
 				fileWriter.println();
-				fileWriter.println(state.getName() + "\t"
-						+ ((state.isNonsecret()) ? 1 : 0) + "\t"
-						+ state.getNumberOfTransitions());
+				if (renumberStates)
+					fileWriter.println(state.index + "\t"
+							+ ((state.nonsecret) ? 1 : 0) + "\t"
+							+ state.numberOfTransitions);
+				else
+					fileWriter.println(state.name + "\t"
+							+ ((state.nonsecret) ? 1 : 0) + "\t"
+							+ state.numberOfTransitions);
 				for (Map.Entry<Event, ArrayList<State>> transitionEntry : state
 						.getAllTransitions().entrySet()) {
 					Event event = transitionEntry.getKey();
 					Event insertedStringEvent = transitionOutputMap.get(state)
 							.get(event);
 					ArrayList<State> nextStateList = transitionEntry.getValue();
-					for (int j = 0; j < nextStateList.size(); j++) {
-						fileWriter.println(event.getName() + "/"
-								+ insertedStringEvent.getName() + "\t"
-								+ nextStateList.get(j).getName() + "\t" + "\t"
-								+ ((event.isObservable()) ? "o" : "uo"));
+					if (renumberStates) {
+						for (int j = 0; j < nextStateList.size(); j++) {
+							fileWriter.println(event.name + "/"
+									+ insertedStringEvent.getName() + "\t"
+									+ nextStateList.get(j).index + "\t"
+									+ ((event.isObservable()) ? "o" : "uo"));
+						}
+					} else {
+						for (int j = 0; j < nextStateList.size(); j++) {
+							fileWriter.println(event.name + "/"
+									+ insertedStringEvent.getName() + "\t"
+									+ nextStateList.get(j).getName() + "\t"
+									+ ((event.isObservable()) ? "o" : "uo"));
+						}
 					}
 				}
 			}

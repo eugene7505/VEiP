@@ -25,7 +25,6 @@ public class Verifier {
 		verifier = CompositionUtilities
 				.pairwiseParallelComposition(safeEstimator,
 						insertionEstimator);
-		verifier.exportFSM("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/verifier.fsm");
 	}
 
 	/*
@@ -94,7 +93,7 @@ public class Verifier {
 				Event insertedEvent = insertionEstimator.addEvent(eventEntry
 						.getKey().concat("i"), true);
 				insertedEvent.setInserted(true);
-				state.addTransition(insertedEvent, state);
+				state.createTransition(insertedEvent, state);
 			}
 			state.updateNumberOfTransitions();
 		}
@@ -132,16 +131,5 @@ public class Verifier {
 		verifier.printFSM();
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
-		FSM estimator = new FSM("testFSM/test0/obsG.fsm");
-		System.out.println("printing Estimator");
-		estimator.printFSM();
-
-		Verifier verifier = new Verifier(estimator);
-		verifier.printEstimator();
-		verifier.printSafeEstimator();
-		verifier.printInsertionEstimator();
-		verifier.printVerifier();
-	}
 
 }

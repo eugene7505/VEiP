@@ -24,18 +24,36 @@ public class State {
 		marked = isNonsecret;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
-
+	/*public State (State s){
+		name = s.name;
+		initial = s.initial;
+		nonsecret = s.nonsecret;
+		marked = s.marked;
+		transitions = new HashMap<Event, ArrayList<State>>();
+		for (Map.Entry<Event, ArrayList<State>> transitionEntry: s.getAllTransitions().entrySet())
+			transitions.put(transitionEntry.getKey(), transitionEntry.getValue());
+	}
+*/
 	public State(String stateName) {
 		name = stateName;
 		transitions = new HashMap<Event, ArrayList<State>>();
 	}
 
+	public void createTransition(Event event, State nextState) {
+		if (!transitions.containsKey(event))
+			transitions.put(event, new ArrayList<State>());
+		(transitions.get(event)).add(nextState);
+		updateNumberOfTransitions();
+	}
+	/*
+	 * This function does not update number of transitions
+	 * It fill out the transition table
+	 */
 	public void addTransition(Event event, State nextState) {
 		if (!transitions.containsKey(event))
 			transitions.put(event, new ArrayList<State>());
 		(transitions.get(event)).add(nextState);
 	}
-
 	public void setTransitions(HashMap<Event, ArrayList<State>> newTransitions) {
 		transitions = newTransitions;
 	}

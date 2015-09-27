@@ -58,10 +58,9 @@ public class FSM {
 					State nextState = addState(nextStates.get(i).getName(),
 							nextStates.get(i).isInitial(), nextStates.get(i)
 									.isNonsecret());
-					state.addTransition(event, nextState);
+					state.createTransition(event, nextState);
 				}
 			}
-			state.updateNumberOfTransitions();
 		}
 		// shallow copy of the localEventMap because event should have global
 		// attributes
@@ -84,7 +83,6 @@ public class FSM {
 			state.nonsecret = (s.nextInt() == 1);
 			state.numberOfTransitions = s.nextInt();
 			for (int j = 0; j < state.numberOfTransitions; j++) {
-
 				String eventName = s.next();
 				String nextStateName = s.next();
 				State nextState = addState(nextStateName);
@@ -143,6 +141,18 @@ public class FSM {
 	 * same name, then return the State object of that name
 	 */
 
+	public State createState(String stateName) {
+		if (!stateMap.containsKey(stateName)) {
+			stateMap.put(stateName, new State(stateName));
+		}
+		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1) {
+			state.setIndex(stateCounter);
+			stateCounter++;
+			updateNumberOfStates();
+		}
+		return state;
+	}
 	public State addState(String stateName) {
 		if (!stateMap.containsKey(stateName)) {
 			stateMap.put(stateName, new State(stateName));
@@ -155,6 +165,24 @@ public class FSM {
 		return state;
 	}
 
+	public State createState(String stateName, boolean isInitial,
+			boolean isNonsecret) {
+		if (!stateMap.containsKey(stateName)) {
+			State state = new State(stateName, isInitial, isNonsecret);
+			if (isInitial){
+				initialStateList.add(state);
+				updateNumberOfInitialStates();
+			}
+			stateMap.put(stateName, state);
+		}
+		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1) {
+			state.setIndex(stateCounter);
+			stateCounter++;
+			updateNumberOfStates();
+		}
+		return state;
+	}
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
@@ -170,7 +198,6 @@ public class FSM {
 		}
 		return state;
 	}
-
 	/*
 	 * This function make an existing state initial
 	 * 
@@ -185,6 +212,7 @@ public class FSM {
 		else if (!initialStateList.contains(state)) {
 			state.setInitial(true);
 			initialStateList.add(state);
+			updateNumberOfInitialStates();
 		}
 	}
 
@@ -208,6 +236,7 @@ public class FSM {
 			else {
 				initialStateList.remove(state);
 				state.setInitial(false);
+				updateNumberOfInitialStates();
 			}
 		}
 	}
@@ -298,7 +327,8 @@ public class FSM {
 	public void removeState(String stateName) {
 		if (stateMap.containsKey(stateName)) {
 			stateMap.remove(stateName);
-		}
+			updateNumberOfStates();
+		}else System.out.println("State" + stateName + "does not exist. Wrong!");
 	}
 
 	public int getNumberOfStates() {
@@ -381,7 +411,7 @@ public class FSM {
 					ArrayList<State> nextStateList = transitionEntry.getValue();
 					for (int j = 0; j < nextStateList.size(); j++) {
 						System.out.println(event.name + "\t"
-								+ nextStateList.get(j).name + "\t" + "\t"
+								+ nextStateList.get(j).name + "\t"
 								+ ((event.isObservable()) ? "o" : "uo"));
 					}
 				}
@@ -389,22 +419,37 @@ public class FSM {
 		}
 	}
 
-	public void exportFSM(String outFileName) throws FileNotFoundException {
+	public void exportFSM(String outFileName, boolean renumberStates)
+			throws FileNotFoundException {
 		PrintWriter fileWriter = new PrintWriter(outFileName);
 		fileWriter.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);
 			fileWriter.println();
-			fileWriter.println(state.name + "\t" + ((state.nonsecret) ? 1 : 0)
-					+ "\t" + state.numberOfTransitions);
+			if (renumberStates)
+				fileWriter.println(state.index + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
+			else
+				fileWriter.println(state.name + "\t"
+						+ ((state.nonsecret) ? 1 : 0) + "\t"
+						+ state.numberOfTransitions);
 			for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
 					.entrySet()) {
 				Event event = transitionEntry.getKey();
 				ArrayList<State> nextStateList = transitionEntry.getValue();
-				for (int j = 0; j < nextStateList.size(); j++) {
-					fileWriter.println(event.name + "\t"
-							+ nextStateList.get(j).name + "\t"
-							+ ((event.isObservable()) ? "o" : "uo"));
+				if (renumberStates) {
+					for (int j = 0; j < nextStateList.size(); j++) {
+						fileWriter.println(event.name + "\t"
+								+ nextStateList.get(j).index + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
+					}
+				} else {
+					for (int j = 0; j < nextStateList.size(); j++) {
+						fileWriter.println(event.name + "\t"
+								+ nextStateList.get(j).name + "\t"
+								+ ((event.isObservable()) ? "o" : "uo"));
+					}
 				}
 			}
 		}
@@ -414,17 +459,30 @@ public class FSM {
 				continue;
 			else {
 				fileWriter.println();
-				fileWriter.println(state.name + "\t"
-						+ ((state.nonsecret) ? 1 : 0) + "\t"
-						+ state.numberOfTransitions);
+				if (renumberStates)
+					fileWriter.println(state.index + "\t"
+							+ ((state.nonsecret) ? 1 : 0) + "\t"
+							+ state.numberOfTransitions);
+				else
+					fileWriter.println(state.name + "\t"
+							+ ((state.nonsecret) ? 1 : 0) + "\t"
+							+ state.numberOfTransitions);
 				for (Map.Entry<Event, ArrayList<State>> transitionEntry : state.transitions
 						.entrySet()) {
 					Event event = transitionEntry.getKey();
 					ArrayList<State> nextStateList = transitionEntry.getValue();
-					for (int j = 0; j < nextStateList.size(); j++) {
-						fileWriter.println(event.name + "\t"
-								+ nextStateList.get(j).name + "\t" + "\t"
-								+ ((event.isObservable()) ? "o" : "uo"));
+					if (renumberStates) {
+						for (int j = 0; j < nextStateList.size(); j++) {
+							fileWriter.println(event.name + "\t"
+									+ nextStateList.get(j).index + "\t"
+									+ ((event.isObservable()) ? "o" : "uo"));
+						}
+					} else {
+						for (int j = 0; j < nextStateList.size(); j++) {
+							fileWriter.println(event.name + "\t"
+									+ nextStateList.get(j).name + "\t"
+									+ ((event.isObservable()) ? "o" : "uo"));
+						}
 					}
 				}
 			}
@@ -432,23 +490,26 @@ public class FSM {
 		fileWriter.close();
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public void exportStateIndexMapping(String stateMappingFile)
+			throws FileNotFoundException {
+		PrintWriter fileWriter = new PrintWriter(stateMappingFile);
+		fileWriter.println("StateIndex \t StateName");
+		for (Map.Entry<String, State> entry : stateMap.entrySet()) {
+			fileWriter.println(entry.getValue().getIndex() + "\t"
+					+ entry.getValue().getName());
+		}
+		fileWriter.close();
+	}
 
-		String file = "testFSM/test1/G.fsm";
-		FSM fsm = new FSM(file);
-		fsm.printFSM();
-		System.out.println("======");
+	public static void main(String[] args) throws FileNotFoundException {
 		FSM fsm2 = new FSM();
-		State s1 = fsm2.addState("s1");
-		State s2 = fsm2.addState("s2");
+		State s1 = fsm2.createState("s1");
+		State s2 = fsm2.createState("s2");
 		fsm2.addInitialState(s2);
 		fsm2.addInitialState(s1);
 		fsm2.removeInitialState(s1);
 		fsm2.printFSM();
-
-		fsm2 = new FSM(fsm);
-		System.out.println("======");
-		fsm2.printFSM();
+		
 	}
 
 }

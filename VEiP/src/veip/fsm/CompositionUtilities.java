@@ -11,15 +11,82 @@ public final class CompositionUtilities {
 	private CompositionUtilities() {
 	}
 
-	public static class StatePair {
-		public StatePair(State s1, State s2) {
-			first = s1;
-			second = s2;
+	/*
+	 * This function computes the product composition for two automata,
+	 * automata may have multiple initial states
+	 */
+	public static FSM pairwiseProduct(FSM fsm1, FSM fsm2) {
+		FSM productFSM = new FSM();
+
+		if (fsm1.initialStateList.size() != 1
+				|| fsm2.initialStateList.size() != 1) {
+			System.out.println("composition with multiple initial states.");
 		}
 
-		State first;
-		State second;
+		HashMap<StatePair, State> statePairMap = new HashMap<StatePair, State>();
+		Stack<StatePair> statePairsStack = new Stack<StatePair>();
+
+		// generate the initial state
+		ArrayList<State> initialStateList1 = fsm1.initialStateList;
+		ArrayList<State> initialStateList2 = fsm2.initialStateList;
+
+		for (int i = 0; i < initialStateList1.size(); i++) {
+			for (int j = 0; j < initialStateList2.size(); j++) {
+				State initialState1 = initialStateList1.get(i);
+				State initialState2 = initialStateList2.get(j);
+				StatePair initialStatePair = new StatePair(initialState1,
+						initialState2);
+				State initialState = productFSM.createState(
+						generateNameFromStatePair(initialStatePair), true,
+						isStatePairNonsecret(initialState1, initialState2));
+				statePairMap.put(initialStatePair, initialState);
+				statePairsStack.push(initialStatePair);
+			}
+		}
+		productFSM.updateNumberOfInitialStates();
+
+		while (!statePairsStack.isEmpty()) {
+			StatePair statePair = statePairsStack.pop();
+			//System.out.println(statePair.first.getName()+","+statePair.second.getName());
+			State state = statePairMap.get(statePair);
+			if (state.flagged)
+				continue;
+			for (Map.Entry<String, Event> eventEntry : fsm2.localEventMap
+					.entrySet()) {
+				Event event = eventEntry.getValue();
+				ArrayList<State> nextStates1;
+				ArrayList<State> nextStates2;
+
+				if (fsm1.localEventMap.containsValue(event)) {
+					nextStates1 = statePair.first.getNextStateList(event);
+					nextStates2 = statePair.second.getNextStateList(event);
+				} 
+				else continue;
+				if (nextStates1 == null || nextStates2 == null)
+					continue;
+				for (int i = 0; i < nextStates1.size(); i++) {
+					for (int j = 0; j < nextStates2.size(); j++) {
+						StatePair nextStatePair = new StatePair(
+								nextStates1.get(i), nextStates2.get(j));
+						State nextState = productFSM.createState(
+								generateNameFromStatePair(nextStatePair),
+								isStatePairInitial(nextStates1.get(i),
+										nextStates2.get(j)),
+								isStatePairNonsecret(nextStates1.get(i),
+										nextStates2.get(j)));
+						statePairMap.put(nextStatePair, nextState);
+						state.createTransition(event, nextState);
+						statePairsStack.push(nextStatePair);
+					}
+				}
+			}
+			state.updateNumberOfTransitions();
+			state.flagged = true;
+		}
+		productFSM.updateNumberOfStates();
+		return productFSM;
 	}
+	
 
 	/*
 	 * This function computes the parallel composition for two automata,
@@ -53,7 +120,7 @@ public final class CompositionUtilities {
 				State initialState2 = initialStateList2.get(j);
 				StatePair initialStatePair = new StatePair(initialState1,
 						initialState2);
-				State initialState = compositeFSM.addState(
+				State initialState = compositeFSM.createState(
 						generateNameFromStatePair(initialStatePair), true,
 						isStatePairNonsecret(initialState1, initialState2));
 				statePairMap.put(initialStatePair, initialState);
@@ -92,14 +159,14 @@ public final class CompositionUtilities {
 					for (int j = 0; j < nextStates2.size(); j++) {
 						StatePair nextStatePair = new StatePair(
 								nextStates1.get(i), nextStates2.get(j));
-						State nextState = compositeFSM.addState(
+						State nextState = compositeFSM.createState(
 								generateNameFromStatePair(nextStatePair),
 								isStatePairInitial(nextStates1.get(i),
 										nextStates2.get(j)),
 								isStatePairNonsecret(nextStates1.get(i),
 										nextStates2.get(j)));
 						statePairMap.put(nextStatePair, nextState);
-						state.addTransition(event, nextState);
+						state.createTransition(event, nextState);
 						state.updateNumberOfTransitions();
 						statePairsStack.push(nextStatePair);
 					}
@@ -120,14 +187,12 @@ public final class CompositionUtilities {
 	 * automata may have multiple initial states Since the number of states of
 	 * the composite PFA is not known a priori, To initialize PFA, we assume the
 	 * number of states = n1*n2 We then resize after the composite automaton is
-	 * completed
+	 * completed. 
 	 */
 
 	public static PFA pairwiseParallelComposition(PFA pfa1, FSM fsm2) {
 		PFA compositePFA = new PFA(pfa1.numberOfStates * fsm2.numberOfStates);
 
-		// System.out.println("numberofstates = " +
-		// compositePFA.numberOfStates);
 		HashSet<Event> sharedEventSet = new HashSet<Event>();
 		HashSet<Event> privateEventSet1 = new HashSet<Event>();
 		HashSet<Event> privateEventSet2 = new HashSet<Event>();
@@ -195,13 +260,13 @@ public final class CompositionUtilities {
 								isStatePairNonsecret(nextStates1.get(i),
 										nextStates2.get(j)));
 						statePairMap.put(nextStatePair, nextState);
-						state.addTransition(event, nextState);
+						state.createTransition(event, nextState);
 						double p = pfa1
 								.getEventMatrix(event, statePair.first.index,
 										nextStates1.get(i).index);
 						compositePFA.setEventMatrix(event, state.index,
 								nextState.index, p);
-						state.updateNumberOfTransitions();
+						//state.updateNumberOfTransitions();
 						statePairsStack.push(nextStatePair);
 					}
 				}
@@ -213,7 +278,7 @@ public final class CompositionUtilities {
 		return compositePFA;
 	}
 
-	private static String generateNameFromStatePair(StatePair statePair) {
+	public static String generateNameFromStatePair(StatePair statePair) {
 		String name = new String("(");
 		name += statePair.first.getName();
 		name += ";";
@@ -222,15 +287,15 @@ public final class CompositionUtilities {
 		return name;
 	}
 
-	private static boolean isStatePairInitial(State s1, State s2) {
+	public static boolean isStatePairInitial(State s1, State s2) {
 		return (s1.isInitial() && s2.isInitial());
 	}
 
-	private static boolean isStatePairNonsecret(State s1, State s2) {
+	public static boolean isStatePairNonsecret(State s1, State s2) {
 		return (s1.isNonsecret() && s2.isNonsecret());
 	}
 
-	private static void computeEventSets(HashMap<String, Event> eventMap1,
+	public static void computeEventSets(HashMap<String, Event> eventMap1,
 			HashMap<String, Event> eventMap2,
 			HashMap<String, Event> eventMapUnion,
 			HashSet<Event> sharedEventSet, HashSet<Event> privateEventSet1,
@@ -254,16 +319,19 @@ public final class CompositionUtilities {
 			}
 		}
 	}
+	
+	private static void printEvents(HashSet<Event> eventSet){
+		for (Event eventEntry: eventSet){
+			System.out.println(eventEntry.getName());
+		}
+	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FSM este = new FSM("testFSM/Ge.fsm");
-		FSM estd = new FSM("testFSM/H.fsm");
-		FSM verifier = CompositionUtilities
-				.pairwiseParallelComposition(este,estd);
-
-		System.out.println("print verifier");
-		verifier.printFSM();
-		verifier.exportFSM("testFSM/V.fsm");
+		FSM safeFsm = new FSM ("../VEiP/testFSM/Office/safe.fsm");
+		FSM editFsm = new FSM ("../VEiP/testFSM/Office/edit.fsm");
+		FSM safeEditPatternFSM = CompositionUtilities
+				.pairwiseParallelComposition(editFsm, safeFsm);
+		safeEditPatternFSM.printFSM();
 
 	}
 

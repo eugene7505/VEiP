@@ -3,8 +3,10 @@ package veip.synthesis;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+
 import veip.fsm.FSM;
 import veip.fsm.Event;
+import veip.fsm.InsertionAutomaton;
 import veip.fsm.State;
 
 public final class SynthesisUtilities {
@@ -18,7 +20,10 @@ public final class SynthesisUtilities {
 		InsertionAutomaton ia = synthesizeGreedyInsertionAutomaton();
 		return ia;
 	}
-
+	/* =======================
+	  * Private functions for greedy synthesis
+	  */	
+	
 	public static InsertionAutomaton optimalSynthesis(AIS ais) {
 		gameGraph = ais.getAisFSM();
 		InsertionAutomaton ia = synthesizeOptimalIA();
@@ -47,7 +52,7 @@ public final class SynthesisUtilities {
 			State ystate = stateStack.pop();
 			if (ystate.flagged)
 				continue;
-			State iaState = ia.addState(ystate.getName(), ystate.isInitial(),
+			State iaState = ia.createState(ystate.getName(), ystate.isInitial(),
 					true);
 			for (HashMap.Entry<Event, ArrayList<State>> transitionEntry : ystate
 					.getAllTransitions().entrySet()) {
@@ -64,8 +69,8 @@ public final class SynthesisUtilities {
 						nextYState = insertionEntry.getValue().get(0);
 					}
 				}
-				State nextIaState = ia.addState(nextYState.getName());
-				iaState.addTransition(event, nextIaState);
+				State nextIaState = ia.createState(nextYState.getName());
+				iaState.createTransition(event, nextIaState);
 				Event outputEvent = new Event(shortestInsertion
 						+ event.getName());
 				ia.addTransitionOuput(iaState, event, outputEvent);
@@ -80,10 +85,12 @@ public final class SynthesisUtilities {
 	}
 
 	/* =======================
-     * Private functions for optimal synthesis
+     * Private functions for mean payoff game synthesis
      */
-	// TODO
 	private static InsertionAutomaton synthesizeOptimalIA() {
+		
+		
+		
 		InsertionAutomaton ia = new InsertionAutomaton();
 		return ia;
 	}

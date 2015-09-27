@@ -3,38 +3,31 @@ package veip.synthesis;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
 import org.ejml.simple.SimpleMatrix;
 
+import veip.fsm.Event;
 import veip.fsm.FSM;
 import veip.fsm.GameStructure;
+import veip.fsm.InsertionAutomaton;
 import veip.fsm.PFA;
 import veip.fsm.State;
-import veip.fsm.Event;
+import veip.fsm.StatePair;
 import veip.verification.CurrentStateEstimator;
 import veip.verification.VerificationUtilities;
 
 public class StochasticSynthesisUtilities {
 
 	public static class StateDistributionPair {
-		public State gameState;
+		public State state;
 		public SimpleMatrix distribution;
 
-		private StateDistributionPair(State gameState, SimpleMatrix distribution) {
-			this.gameState = gameState;
+		private StateDistributionPair(State state, SimpleMatrix distribution) {
+			this.state = state;
 			this.distribution = distribution;
-		}
-	}
-
-	public static class StatePair {
-		public State first;
-		public State second;
-
-		private StatePair(State first, State second) {
-			this.first = first;
-			this.second = second;
 		}
 	}
 
@@ -51,6 +44,7 @@ public class StochasticSynthesisUtilities {
 	public static GameStructure constructMDP(FSM vu, PFA pfa) {
 
 		GameStructure mdp = new GameStructure();
+		mdp.initiateEventSet(pfa.getLocalEventMap());
 		// compute event matrices
 		int n = pfa.getNumberOfStates();
 		SimpleMatrix uoEventMatrix = new SimpleMatrix(n, n);
@@ -76,32 +70,32 @@ public class StochasticSynthesisUtilities {
 		// construct mdp
 		HashMap<Event, HashMap<StatePair, Double>> transitionProbabilityMap = new HashMap<Event, HashMap<StatePair, Double>>();
 		HashMap<Event, HashMap<StatePair, Double>> costMatrixMap = new HashMap<Event, HashMap<StatePair, Double>>();
+		// mapping from mdp game position to (state,distribution) pair
 		HashMap<State, StateDistributionPair> stateDistributionMap = new HashMap<State, StochasticSynthesisUtilities.StateDistributionPair>();
 
 		StateDistributionPair initialPair = new StateDistributionPair(vu
 				.getInitialStateList().get(0), pfa.getInitialDistribution());
-		State initialState = mdp.addState(generateStateName(initialPair), true,
-				initialPair.gameState.isMarked());
-		stateDistributionMap.put(initialState, initialPair);
+		State initialPosition = mdp.createState(generateStateName(initialPair),
+				true, initialPair.state.isMarked());
+		stateDistributionMap.put(initialPosition, initialPair);
 
 		Stack<State> stack = new Stack<State>();
-		State reveal = mdp.addState("reveal");
-		Event noInsertion = mdp.addEvent("-");
-		costMatrixMap.put(noInsertion,
-				new HashMap<StochasticSynthesisUtilities.StatePair, Double>());
+		State bottom = mdp.createState("bot");
+		Event otherInsertions = mdp.addEvent("others");
+		costMatrixMap.put(otherInsertions, new HashMap<StatePair, Double>());
 
-		stack.push(initialState);
+		stack.push(initialPosition);
 		while (!stack.isEmpty()) {
-			State state = stack.pop();
-			if (state.flagged)
+			State position = stack.pop();
+			if (position.flagged)
 				continue;
 			else {
 				// System.out.println(state.getName());
-				State gameState = stateDistributionMap.get(state).gameState;
-				SimpleMatrix distribution = stateDistributionMap.get(state).distribution;
-				// expandYState
-				if (state.isMarked()) {
-					for (Map.Entry<Event, ArrayList<State>> transitionEntry : gameState
+				State vuState = stateDistributionMap.get(position).state;
+				SimpleMatrix distribution = stateDistributionMap.get(position).distribution;
+				// expandS1Position
+				if (position.isMarked()) {
+					for (Map.Entry<Event, ArrayList<State>> transitionEntry : vuState
 							.getAllTransitions().entrySet()) {
 						Event event = mdp.addEvent(transitionEntry.getKey()
 								.getName());
@@ -109,52 +103,48 @@ public class StochasticSynthesisUtilities {
 						StateDistributionPair nextPair = new StateDistributionPair(
 								transitionEntry.getValue().get(0),
 								nextDistribution(distribution, eMatrix));
-						State nextZState = mdp.addState(
+						State nextS2Position = mdp.createState(
 								generateStateName(nextPair), false, false);
-						stateDistributionMap.put(nextZState, nextPair);
-						stack.push(nextZState);
-						state.addTransition(event, nextZState);
+						stateDistributionMap.put(nextS2Position, nextPair);
+						stack.push(nextS2Position);
+						position.createTransition(event, nextS2Position);
 						if (!transitionProbabilityMap.containsKey(event))
-							transitionProbabilityMap
-									.put(event,
-											new HashMap<StochasticSynthesisUtilities.StatePair, Double>());
+							transitionProbabilityMap.put(event,
+									new HashMap<StatePair, Double>());
 						transitionProbabilityMap.get(event).put(
-								new StatePair(state, nextZState),
+								new StatePair(position, nextS2Position),
 								transitionProbability(distribution, eMatrix));
 					}
-					state.updateNumberOfTransitions();
-					state.flagged = true;
+					position.updateNumberOfTransitions();
+					position.flagged = true;
 				}
-				// expandZState
+				// expandS2Position
 				else {
-					if (gameState.getAllTransitions().size() == 0) {
-						state.addTransition(noInsertion, reveal);
-						costMatrixMap.get(noInsertion).put(
-								new StatePair(state, reveal), new Double(1));
-					} else {
-						for (Map.Entry<Event, ArrayList<State>> transitionEntry : gameState
-								.getAllTransitions().entrySet()) {
-							Event event = mdp.addEvent(transitionEntry.getKey()
-									.getName());
-							StateDistributionPair nextPair = new StateDistributionPair(
-									transitionEntry.getValue().get(0),
-									distribution);
-							State nextYState = mdp
-									.addState(generateStateName(nextPair));
-							stateDistributionMap.put(nextYState, nextPair);
-							stack.push(nextYState);
-							state.addTransition(event, nextYState);
-							if (!costMatrixMap.containsKey(event))
-								costMatrixMap
-										.put(event,
-												new HashMap<StochasticSynthesisUtilities.StatePair, Double>());
-							costMatrixMap.get(event).put(
-									new StatePair(state, nextYState),
-									new Double(0));
-						}
+					for (Map.Entry<Event, ArrayList<State>> transitionEntry : vuState
+							.getAllTransitions().entrySet()) {
+						Event event = mdp.addEvent(transitionEntry.getKey()
+								.getName());
+						StateDistributionPair nextPair = new StateDistributionPair(
+								transitionEntry.getValue().get(0), distribution);
+						State nextS1Position = mdp.createState(
+								generateStateName(nextPair), false, true);
+						stateDistributionMap.put(nextS1Position, nextPair);
+						stack.push(nextS1Position);
+						position.createTransition(event, nextS1Position);
+						if (!costMatrixMap.containsKey(event))
+							costMatrixMap.put(event,
+									new HashMap<StatePair, Double>());
+						costMatrixMap.get(event).put(
+								new StatePair(position, nextS1Position),
+								new Double(0));
 					}
-					state.updateNumberOfTransitions();
-					state.flagged = true;
+
+					position.createTransition(otherInsertions, bottom);
+					costMatrixMap.get(otherInsertions).put(
+							new StatePair(position, bottom), new Double(1));
+
+					position.updateNumberOfTransitions();
+					position.flagged = true;
 				}
 			}
 		}
@@ -163,10 +153,9 @@ public class StochasticSynthesisUtilities {
 		mdp.updateNumberOfStates();
 
 		// construct transition matrix and reward matrix
-		mdp.constructTransitionProbabilityMatrixMap(transitionProbabilityMap);
-		mdp.constructRewardMatrixMap(costMatrixMap);
+		mdp.constructYtoZWeightMatrixMap(transitionProbabilityMap);
+		mdp.constructZtoYWeightMatrixMap(costMatrixMap);
 		mdp.updateNumberOfStates();
-		mdp.printFSM();
 		return mdp;
 	}
 
@@ -186,7 +175,7 @@ public class StochasticSynthesisUtilities {
 	}
 
 	private static String generateStateName(StateDistributionPair pair) {
-		String name = pair.gameState.getName();
+		String name = pair.state.getName();
 		for (int i = 0; i < pair.distribution.numCols(); i++) {
 			name += " ";
 			name += String.valueOf(pair.distribution.get(i));
@@ -216,11 +205,64 @@ public class StochasticSynthesisUtilities {
 	public static IAValuePair optimalOpacityLevelSynthesis(FSM vu, PFA pfa) {
 		gameGraph = constructMDP(vu, pfa);
 		// gameGraph.printFSM();
-		GameUtilities.valueIteration_MinAverageCost(gameGraph);
+		valueIteration_MinAverageCost(gameGraph);
 		InsertionAutomaton ia = synthesizeOptimalOpacityLevelIA();
 		IAValuePair pair = new IAValuePair(ia, gameGraph.getValue(gameGraph
 				.getInitialStateList().get(0)));
 		return pair;
+	}
+
+	public static void valueIteration_MinAverageCost(GameStructure gameGraph) {
+		int n = gameGraph.getNumberOfStates();
+		gameGraph.initializeOptimalActions();
+		SimpleMatrix stateValueVector;
+		SimpleMatrix newStateValueVector = new SimpleMatrix(n, 1);
+		SimpleMatrix transitionProbabilityMatrix = new SimpleMatrix(n, n);
+
+		for (Map.Entry<Event, SimpleMatrix> entry : gameGraph.getMatrixMap()
+				.entrySet()) {
+			SimpleMatrix matrix = entry.getValue();
+			transitionProbabilityMatrix = transitionProbabilityMatrix
+					.plus(matrix);
+		}
+		ArrayList<State> stateList = gameGraph.getStateList();
+		do {
+			stateValueVector = new SimpleMatrix(newStateValueVector);
+			for (int i = 0; i < stateList.size(); i++) {
+				double newValue = 0;
+				Event optimalEvent = null;
+				if (stateList.get(i).isMarked()) {// Y state, take average
+					for (int j = 0; j < stateList.size(); j++) {
+						newValue += transitionProbabilityMatrix.get(i, j)
+								* stateValueVector.get(j);
+					}
+				} else {// Z state, minimize cost to go
+					Iterator<Map.Entry<Event, ArrayList<State>>> iterator = stateList
+							.get(i).getAllTransitions().entrySet().iterator();
+					Map.Entry<Event, ArrayList<State>> entry = iterator.next();
+					int j = entry.getValue().get(0).getIndex();
+					Event event = entry.getKey();
+					double transitionCost = gameGraph.getMatrixEntry(event, i,
+							j);
+					newValue = transitionCost + stateValueVector.get(j);
+					optimalEvent = event;
+					while (iterator.hasNext()) {
+						entry = iterator.next();
+						j = entry.getValue().get(0).getIndex();
+						event = entry.getKey();
+						transitionCost = gameGraph.getMatrixEntry(event, i, j);
+						if (transitionCost + stateValueVector.get(j) < newValue) {
+							newValue = transitionCost + stateValueVector.get(j);
+							optimalEvent = event;
+						}
+					}
+					gameGraph.setOptimalAction(i, optimalEvent);
+				}
+				newStateValueVector.set(i, newValue);
+			}
+
+		} while (stateValueVector.minus(newStateValueVector).elementMaxAbs() > epsilon);
+		gameGraph.setValueVector(stateValueVector);
 	}
 
 	// assume gameGraph has optimal actions and values
@@ -233,29 +275,41 @@ public class StochasticSynthesisUtilities {
 			State ystate = stack.pop();
 			if (ystate.flagged)
 				continue;
-			State iaState = ia.addState(ystate.getName(), ystate.isInitial(),
-					true);
-			for (Map.Entry<Event, ArrayList<State>> transitionEntry : ystate
-					.getAllTransitions().entrySet()) {
-				Event event = transitionEntry.getKey();
-				State zstate = transitionEntry.getValue().get(0);
-				Event optimalInsertion = gameGraph.getOptimalAction(zstate);
-				State nextYState = zstate.getNextStateList(optimalInsertion)
-						.get(0);
-				State nextIaState = ia.addState(nextYState.getName(),
-						nextYState.isInitial(), true);
-				iaState.addTransition(event, nextIaState);
-				Event outputEvent;
-				if (optimalInsertion.getName().equals("-"))
-					outputEvent = optimalInsertion;
-				else
-					outputEvent = new Event(optimalInsertion.getName()
-							+ event.getName());
-				ia.addTransitionOuput(iaState, event, outputEvent);
-				stack.push(nextYState);
+			else {
+				State iaState = ia.createState(ystate.getName(),
+						ystate.isInitial(), true);
+				if (ystate.getName().equals("bot")) {
+					for (Event e: gameGraph.getEventSet()){
+						iaState.createTransition(e, iaState);
+						ia.addTransitionOuput(iaState, e, e);
+					}
+						
+				} else {
+					for (Map.Entry<Event, ArrayList<State>> transitionEntry : ystate
+							.getAllTransitions().entrySet()) {
+						Event event = transitionEntry.getKey();
+						State zstate = transitionEntry.getValue().get(0);
+						Event optimalInsertion = gameGraph
+								.getOptimalAction(zstate);
+						State nextYState = zstate.getNextStateList(
+								optimalInsertion).get(0);
+						State nextIaState = ia.createState(
+								nextYState.getName(), nextYState.isInitial(),
+								true);
+						iaState.createTransition(event, nextIaState);
+						Event outputEvent;
+						if (optimalInsertion.getName().equals("others"))
+							outputEvent = event;
+						else
+							outputEvent = new Event(optimalInsertion.getName()
+									+ event.getName());
+						ia.addTransitionOuput(iaState, event, outputEvent);
+						stack.push(nextYState);
+					}
+				}
+				ystate.flagged = true;
+				iaState.updateNumberOfTransitions();
 			}
-			ystate.flagged = true;
-			iaState.updateNumberOfTransitions();
 		}
 		ia.updateNumberOfInitialStates();
 		ia.updateNumberOfStates();
@@ -263,30 +317,29 @@ public class StochasticSynthesisUtilities {
 	}
 
 	public static GameStructure gameGraph;
+	private static double epsilon = 5.96e-8;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		String automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/H4.pfa";
+		String automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/acc2015RunningExample/H.pfa";
 		PFA pfa = new PFA(automatonFile);
-		pfa.printPFA();
 		VerificationUtilities.isCurrentStateOpaque(pfa, true);
 		double opacityLevel = VerificationUtilities.computeOpacityLevel(pfa);
 		System.out.println("opacity level = " + opacityLevel);
-		System.out.println("Synthesizing an f_I that maximizes the opacity level:");
+		System.out
+				.println("Synthesizing an f_I that maximizes the opacity level:");
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
 				pfa);
 		FSM estimator = new FSM(currentStateEstimator);
-		estimator.printFSM();
 		Verifier verifier = new Verifier(estimator);
-		verifier.printVerifier();
 		UnfoldedVerifier unfoldedVerifier = new UnfoldedVerifier(verifier, true);
 		FSM vu = unfoldedVerifier.getUnfoldedVerifierFSM();
-		vu.exportFSM("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/vu.fsm");
 
-		//TODO? check optimal synthesis, wrong IA
-		//IAValuePair iaValuePair = optimalOpacityLevelSynthesis(vu, pfa);
-//		iaValuePair.ia.renameStates();
-//		iaValuePair.ia.printIA();
+		IAValuePair iaValuePair = optimalOpacityLevelSynthesis(vu, pfa);
+		iaValuePair.ia.printIA();
+		iaValuePair.ia
+				.exportFSM(
+						"/Users/yi-chinwu/git/VEiP/VEiP/testFSM/acc2015RunningExample/IA.fsm",
+						true);
 	}
 }
 
-// given vu and pfa, compute the optimal strategy.

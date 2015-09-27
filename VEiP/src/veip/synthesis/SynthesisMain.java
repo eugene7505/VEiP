@@ -3,6 +3,7 @@ package veip.synthesis;
 import java.io.FileNotFoundException;
 
 import veip.fsm.FSM;
+import veip.fsm.InsertionAutomaton;
 import veip.fsm.PFA;
 import veip.synthesis.StochasticSynthesisUtilities.IAValuePair;
 import veip.verification.CurrentStateEstimator;
@@ -45,13 +46,13 @@ public class SynthesisMain {
 			}
 		} else {
 			System.out
-					.println("Usage: veip.synthesis.SynthesisMain [Options] <fsmFile/pfaFile> <IAFile>.");
+					.println("Usage: veip.synthesis.SynthesisMain [Options] <fsmFile/pfaFile> <IAFile>. Testing Stochastic Synthesis");
 
-			automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/dailyBehavior/office.fsm";
-			iaFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/dailyBehavior/officeIA.fsm";
-			option = GREEDY;
+			automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/acc2015RunningExample/H.pfa";
+			iaFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/acc2015RunningExample/IA.fsm";
+			option = STOCHASTIC;
 
-			System.out.println("Run example:\nveip.synthesis.SynthesisMain -g "
+			System.out.println("Run example:\nveip.synthesis.SynthesisMain -s "
 					+ automatonFile + " " + iaFile + ".");
 			System.out.println("Options:");
 			System.out.println("-g  Synthesis with the greedy algorithm.");
@@ -79,16 +80,23 @@ public class SynthesisMain {
 						.println("G is unsafe at the initial state. Opacity cannot be enforced using insertion functions!");
 			else {
 				FSM estimator = new FSM(currentStateEstimator);
-				double opacityLevel = VerificationUtilities.computeOpacityLevel(pfa);
-				System.out.println("opacity level = " + opacityLevel + ". Synthesize an insertion function that maximizes the opacity level:");
+				double opacityLevel = VerificationUtilities
+						.computeOpacityLevel(pfa);
+				System.out
+						.println("opacity level = "
+								+ opacityLevel
+								+ ". Synthesize an insertion function that maximizes the opacity level...");
 				verifier = new Verifier(estimator);
 				unfoldedVerifier = new UnfoldedVerifier(verifier, true);
-				IAValuePair iaValuePair =  StochasticSynthesisUtilities.optimalOpacityLevelSynthesis(
-						unfoldedVerifier.getUnfoldedVerifierFSM(), pfa);
-				iaValuePair.ia.renameStates();
-				iaValuePair.ia.printIA();
-				iaValuePair.ia.exportFSM(iaFile);
-				System.out.println("optimal opacity level = " + (1 - iaValuePair.value));
+				IAValuePair iaValuePair = StochasticSynthesisUtilities
+						.optimalOpacityLevelSynthesis(
+								unfoldedVerifier.getUnfoldedVerifierFSM(), pfa);
+				iaValuePair.ia.exportFSM(iaFile, true);
+				System.out.println("optimal opacity level = "
+						+ (1 - iaValuePair.value));
+				System.out
+						.println("The optimal insertion function has exported to "
+								+ iaFile);
 			}
 		}
 
@@ -104,11 +112,11 @@ public class SynthesisMain {
 				InsertionAutomaton ia;
 				FSM estimator = new FSM(currentStateEstimator);
 				verifier = new Verifier(estimator);
-				//System.out.println("verifier");
-				//verifier.printVerifier();
+				// System.out.println("verifier");
+				// verifier.printVerifier();
 				unfoldedVerifier = new UnfoldedVerifier(verifier, true);
-				//System.out.println("unfoldedVerifier:");
-				//unfoldedVerifier.printUnfoldedVerifier();
+				// System.out.println("unfoldedVerifier:");
+				// unfoldedVerifier.printUnfoldedVerifier();
 				ais = new AIS(unfoldedVerifier);
 
 				if (ais.getAisFSM().isEmptyFSM())

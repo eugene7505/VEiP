@@ -135,7 +135,7 @@ public class PFA extends FSM {
 						Event event = localEventMap.get(hmm.observationList
 								.get(k));
 						if (hmm.observationMatrix.get(i, k) > 0) {
-							state.addTransition(event, stateList.get(j));
+							state.createTransition(event, stateList.get(j));
 							setEventMatrix(
 									event,
 									i,
@@ -147,9 +147,7 @@ public class PFA extends FSM {
 					}
 				}
 			}
-			state.updateNumberOfTransitions();
 		}
-		updateNumberOfInitialStates();
 	}
 
 	/*
@@ -171,6 +169,20 @@ public class PFA extends FSM {
 	 * 
 	 * @see veip.fsm.FSM#addState(java.lang.String)
 	 */
+	public State createState(String stateName) {
+		if (!stateMap.containsKey(stateName)) {
+			stateMap.put(stateName, new State(stateName));
+		}
+		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1) {
+			stateList.add(stateCounter, state);
+			state.setIndex(stateCounter);
+			stateCounter++;
+			updateNumberOfStates();
+		}
+		return state;
+	}
+
 	public State addState(String stateName) {
 		if (!stateMap.containsKey(stateName)) {
 			stateMap.put(stateName, new State(stateName));
@@ -185,6 +197,26 @@ public class PFA extends FSM {
 	}
 
 	@Override
+	public State createState(String stateName, boolean isInitial,
+			boolean isNonsecret) {
+		if (!stateMap.containsKey(stateName)) {
+			State state = new State(stateName, isInitial, isNonsecret);
+			if (isInitial) {
+				initialStateList.add(state);
+				updateNumberOfInitialStates();
+			}
+			stateMap.put(stateName, state);
+		}
+		State state = stateMap.get(stateName);
+		if (state.getIndex() == -1) {
+			stateList.add(stateCounter, state);
+			state.setIndex(stateCounter);
+			stateCounter++;
+			updateNumberOfStates();
+		}
+		return state;
+	}
+
 	public State addState(String stateName, boolean isInitial,
 			boolean isNonsecret) {
 		if (!stateMap.containsKey(stateName)) {
@@ -282,41 +314,9 @@ public class PFA extends FSM {
 	private static double epsilon = 5.96e-8;
 
 	public static void main(String[] args) throws FileNotFoundException {
-
-		int n = 4;
-		int o = 2;
-		SimpleMatrix A = new SimpleMatrix(n, n);
-		A.set(0, 1, 0.9);
-		A.set(0, 0, 0.1);
-		A.set(1, 2, 0.7);
-		A.set(1, 3, 0.3);
-		A.set(2, 0, 0.1);
-		A.set(2, 1, 0.9);
-		A.set(3, 2, 0.7);
-		A.set(3, 3, 0.3);
-		SimpleMatrix B = new SimpleMatrix(n, o);
-		B.set(0, 0, 0.2);
-		B.set(0, 1, 0.8);
-		B.set(1, 0, 0.3);
-		B.set(1, 1, 0.7);
-		B.set(2, 0, 0.8);
-		B.set(2, 1, 0.2);
-		B.set(3, 0, 0.9);
-		B.set(3, 1, 0.1);
-		SimpleMatrix pi = new SimpleMatrix(1, n);
-		pi.set(0, 0.04);
-		pi.set(1, 0.36);
-		pi.set(2, 0.42);
-		pi.set(3, 0.18);
-
-		ArrayList<String> observations = new ArrayList<String>();
-		observations.add("a");
-		observations.add("b");
-		HMM hmm = new HMM(n, o, A, B, pi, observations);
-		hmm.printHMM();
-		System.out.println();
-
-		PFA pfa = new PFA(hmm);
+		String automatonFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/stochastic/H4.pfa";
+		PFA pfa = new PFA(automatonFile);
 		pfa.printPFA();
+
 	}
 }

@@ -6,7 +6,7 @@ public class Event {
 	private boolean observable = true;
 	private boolean inserted = false;
 	private boolean replacement = false;
-
+	
 	public Event(String eventName) {
 		name = eventName;
 	}
@@ -28,10 +28,6 @@ public class Event {
 		return inserted;
 	}
 
-	public boolean isReplacement() {
-		return replacement;
-	}
-
 	public void setObservable(boolean observable) {
 		this.observable = observable;
 	}
@@ -39,9 +35,13 @@ public class Event {
 	public void setInserted(boolean inserted) {
 		this.inserted = inserted;
 	}
+	
+	public boolean isReplacement() {
+		return replacement;
+	}
 
 	public void setReplacement(boolean replacement) {
 		this.replacement = replacement;
 	}
-
+	
 }

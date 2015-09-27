@@ -57,7 +57,7 @@ public class UnfoldedVerifier {
 
 	private void buildUnfoldedVerifier(boolean withInsertionLabels) {
 		// notice that all y states are marked (i.e., nonsecret)
-		State initialYState = unfoldedVerifier.addState(verifier
+		State initialYState = unfoldedVerifier.createState(verifier
 				.getInitialStateList().get(0).getName(), true, true);
 		YtoMStateMap.put(initialYState, verifier.getInitialStateList().get(0));
 		stateStack.push(initialYState);
@@ -84,11 +84,11 @@ public class UnfoldedVerifier {
 				.getAllTransitions().entrySet()) {
 			Event event = unfoldedVerifier.addEvent(transitionEntry.getKey()
 					.getName(), transitionEntry.getKey().isObservable());
-			State nextZstate = unfoldedVerifier.addState(
+			State nextZstate = unfoldedVerifier.createState(
 					generateZStateName(ystate, event), false, false);
 			stateStack.push(nextZstate);
 			addZtoYEventMap(nextZstate, ystate, event);
-			ystate.addTransition(event, nextZstate);
+			ystate.createTransition(event, nextZstate);
 		}
 		ystate.updateNumberOfTransitions();
 	}
@@ -108,13 +108,13 @@ public class UnfoldedVerifier {
 							.getAllTransitions().get(eventPart);
 					if (nextMStates == null)
 						continue;
-					State nextYState = unfoldedVerifier.addState(nextMStates
+					State nextYState = unfoldedVerifier.createState(nextMStates
 							.get(0).getName(), false, true);
 					stateStack.push(nextYState);
 					addYtoMStateMap(nextYState, nextMStates.get(0));
 					Event mprimEvent = unfoldedVerifier.addEvent(
 							mprimeState.getName(), true);
-					zstate.addTransition(mprimEvent, nextYState);
+					zstate.createTransition(mprimEvent, nextYState);
 				}
 			} else {
 				String insertedString = shortestDashedPath.get(mState).get(
@@ -126,13 +126,13 @@ public class UnfoldedVerifier {
 							.getAllTransitions().get(eventPart);
 					if (nextMStates == null)
 						continue;
-					State nextYState = unfoldedVerifier.addState(nextMStates
+					State nextYState = unfoldedVerifier.createState(nextMStates
 							.get(0).getName(), false, true);
 					stateStack.push(nextYState);
 					addYtoMStateMap(nextYState, nextMStates.get(0));
 					Event insertedStringEvent = unfoldedVerifier.addEvent(
 							insertedString, true);
-					zstate.addTransition(insertedStringEvent, nextYState);
+					zstate.createTransition(insertedStringEvent, nextYState);
 				}
 			}
 		}

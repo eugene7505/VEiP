@@ -57,7 +57,7 @@ public final class VerificationUtilities {
 	public static boolean isCurrentStateOpaque(FSM fsm, boolean printMessages) {
 		CurrentStateEstimator currentStateEstimator = new CurrentStateEstimator(
 				fsm);
-		currentStateEstimator.printEstimator();
+		//currentStateEstimator.printEstimator();
 		boolean isOpaque = currentStateEstimator.isCurrentStateOpaque();
 		if (printMessages){
 			if (isOpaque)
