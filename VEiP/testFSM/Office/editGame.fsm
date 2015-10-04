@@ -1,0 +1,1052 @@
+174	1
+
+0	1	1
+in1	1	o
+
+11	0	4
+out1_r	13	o
+in1_iin2_iout2	12	o
+in1_r	14	o
+in1_iin2_iout2_iout2	12	o
+
+144	0	4
+in1	89	o
+out1_r	90	o
+out1_iin1	95	o
+out1_iin1_iin1	91	o
+
+16	0	5
+in2_iout2_iout1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	51	o
+in2_iout2_iout1	50	o
+
+37	0	5
+out1_r	31	o
+in1_iin2_iin2	8	o
+in1_iin2_iout2_iin2	8	o
+in1_iin2	8	o
+in1_r	38	o
+
+25	0	6
+out1_r	125	o
+out2_r	121	o
+in2_r	84	o
+out1_iin1	121	o
+out1_iout1_iin1_iin1	114	o
+out1_iout1_iin1	85	o
+
+27	1	3
+in1	28	o
+out1	29	o
+in2	30	o
+
+116	0	4
+out1_r	85	o
+in2	84	o
+in2_iin2	84	o
+in2_iout2_iin2	84	o
+
+156	0	4
+out1_r	27	o
+in2_r	20	o
+in2_iout2	12	o
+out2	12	o
+
+49	0	4
+in1_iin1_iin2_iin2	8	o
+in1_iin1_iin2_iout2_iin2	8	o
+in1_iin1_iin2	8	o
+in1_r	9	o
+
+83	0	4
+in1_iin1_iin2_iin2	84	o
+in1_iin1_iin2_iout2_iin2	84	o
+in1_iin1_iin2	84	o
+in1_r	85	o
+
+141	0	5
+in1_iin1_iin2_iout2_iout1	50	o
+in1_iout1	0	o
+in1_iin1_iin2_iout2_iout1_iout1	0	o
+in1_iin1_iout1	51	o
+in1_r	51	o
+
+22	0	6
+out2_r	67	o
+out2_iout1_iout1	0	o
+in2_r	68	o
+out2_iout1_iout1_iin1_iout1	0	o
+out2_iout1	50	o
+out2_iout1_iout1_iin1_iin1_iout1	51	o
+
+132	1	4
+in1	148	o
+out1	149	o
+in2	150	o
+out2	151	o
+
+1	0	3
+in1	3	o
+in1_iin1	4	o
+in1_iin1_iin2_iout2_iout1_iin1	2	o
+
+33	0	3
+in1_iin1_iin2_iout2_iout2	12	o
+in1_iin1_iin2_iout2	12	o
+in1_r	34	o
+
+165	0	5
+out1_iout1_iin1_iin1_iin2	84	o
+out1_r	125	o
+out2_r	121	o
+in2	84	o
+in2_iin2	84	o
+
+106	0	4
+out1_r	90	o
+in1_iout2	89	o
+in1_iin2_iout2	89	o
+in1_r	89	o
+
+125	1	3
+out1	126	o
+in2	127	o
+out2	128	o
+
+135	1	4
+in1	136	o
+out1	137	o
+in2	138	o
+out2	139	o
+
+121	1	3
+out1	122	o
+in2	123	o
+out2	124	o
+
+139	0	4
+out1_r	34	o
+in2_r	20	o
+in2_iout2	12	o
+in2_iout2_iout2	12	o
+
+161	0	3
+in2_r	20	o
+out2_iout2	12	o
+out2	12	o
+
+46	0	4
+out1_r	13	o
+in1_iin2_iout2	12	o
+in1_iout2	12	o
+in1_r	12	o
+
+126	0	5
+in1_iout1	44	o
+out1_iin1_iin1_iout1	9	o
+out1	31	o
+out1_iin1_iout1	31	o
+in1_r	24	o
+
+155	0	5
+out1_iout1_iin1_iin1_iin2	8	o
+out1_r	44	o
+out2_r	24	o
+in2	8	o
+in2_iin2	8	o
+
+15	0	5
+out1_r	78	o
+in2_r	169	o
+out1_iin1	80	o
+in2_iout2_iout1_iin1	79	o
+out1_iout1_iin1	78	o
+
+164	0	6
+out2_r	2	o
+out1_iout1_iin1_iout1	53	o
+in2_r	63	o
+out1_iout1	53	o
+out1	74	o
+out1_iout1_iin1_iin1_iout1	3	o
+
+130	0	4
+in1_iin1_iin2_iin2	84	o
+in1_iin1_iin2_iout2_iin2	84	o
+in1_iin1_iin2	84	o
+in1_r	85	o
+
+146	0	5
+out1_r	31	o
+out1_iin1_iin1_iin2	8	o
+in1_iin2_iin2	8	o
+in1_iin2	8	o
+in1_r	24	o
+
+66	0	4
+out2_r	24	o
+out2_iin2	8	o
+in2	8	o
+out2_iout1_iout1_iin1_iin1_iin2	8	o
+
+62	0	5
+out1_r	3	o
+in2_r	63	o
+out1_iin1	4	o
+in2_iout2_iout1_iin1	2	o
+out1_iout1_iin1	3	o
+
+166	0	5
+in1_iout1	3	o
+out1	53	o
+in1_iin2_iout2_iout1_iout1	53	o
+in1_iin2_iout2_iout1	74	o
+in1_r	4	o
+
+100	0	6
+out2_r	152	o
+out1_iout1_iin1_iout1	134	o
+in2_r	157	o
+out1_iout1	134	o
+out1	133	o
+out1_iout1_iin1_iin1_iout1	132	o
+
+13	1	3
+in1	47	o
+out1	48	o
+in2	49	o
+
+133	1	4
+in1	144	o
+out1	145	o
+in2	146	o
+out2	147	o
+
+153	0	6
+out1_r	103	o
+out2_r	89	o
+in2_r	96	o
+out1_iin1	89	o
+out1_iout1_iin1_iin1	91	o
+out1_iout1_iin1	95	o
+
+79	1	2
+out1	164	o
+in2	165	o
+
+102	0	4
+out1_r	103	o
+in2_r	96	o
+in2_iout2	89	o
+out2	89	o
+
+157	1	4
+in1	158	o
+out1	159	o
+in2	160	o
+out2	161	o
+
+140	0	3
+in1	95	o
+in1_iin1	91	o
+in1_iin1_iin2_iout2_iout1_iin1	89	o
+
+159	0	6
+out2_r	67	o
+out2_iout1_iout1	0	o
+in2_r	68	o
+out2_iout1_iout1_iin1_iout1	0	o
+out2_iout1	50	o
+out2_iout1_iout1_iin1_iin1_iout1	51	o
+
+78	1	2
+out1	166	o
+in2	167	o
+
+114	1	3
+out1	115	o
+in2	116	o
+out2	117	o
+
+128	0	4
+out1_r	90	o
+in1_iout2	89	o
+in1_iin2_iout2	89	o
+in1_r	89	o
+
+73	0	6
+out1_r	74	o
+out2_r	2	o
+in2_r	63	o
+out1_iin1	2	o
+out1_iout1_iin1_iin1	4	o
+out1_iout1_iin1	3	o
+
+98	0	4
+out2_r	121	o
+out2_iin2	84	o
+in2	84	o
+out2_iout1_iout1_iin1_iin1_iin2	84	o
+
+44	1	2
+in1	45	o
+out2	46	o
+
+151	0	4
+out1_r	13	o
+in1_iin2_iout2	12	o
+in1_r	14	o
+in1_iin2_iout2_iout2	12	o
+
+152	1	4
+in1	153	o
+out1	154	o
+in2	155	o
+out2	156	o
+
+50	1	1
+in1	57	o
+
+107	0	5
+in1_iin1_iin2_iout2_iout1	133	o
+in1_iout1	134	o
+in1_iin1_iin2_iout2_iout1_iout1	134	o
+in1_iin1_iout1	132	o
+in1_r	132	o
+
+38	1	2
+in1	39	o
+out2	40	o
+
+160	0	4
+out2_r	24	o
+out2_iin2	8	o
+in2	8	o
+out2_iout1_iout1_iin1_iin1_iin2	8	o
+
+4	1	3
+in1	5	o
+out1	6	o
+in2	7	o
+
+32	0	3
+in1	85	o
+in1_iin1	114	o
+in1_iin1_iin2_iout2_iout1_iin1	121	o
+
+162	0	5
+in2_iout2_iout1_iout1	53	o
+in2_r	63	o
+out1_iout1	53	o
+out1	3	o
+in2_iout2_iout1	74	o
+
+170	0	6
+out2_r	2	o
+out2_iout1_iout1	53	o
+in2_r	63	o
+out2_iout1_iout1_iin1_iout1	53	o
+out2_iout1_iout1_iin1_iin1_iout1	3	o
+out2_iout1	74	o
+
+64	0	5
+out2_iout1_iin1	79	o
+out2_r	79	o
+out2_iout1_iout1_iin1	78	o
+in2_r	169	o
+out2_iout1_iout1_iin1_iin1	80	o
+
+147	0	4
+out1_r	13	o
+in1_iout2	12	o
+in1_iin2_iout2	12	o
+in1_r	12	o
+
+131	0	3
+in1_iin1_iin2_iout2_iout2	89	o
+in1_iin1_iin2_iout2	89	o
+in1_r	95	o
+
+90	1	3
+out1	107	o
+in2	108	o
+out2	109	o
+
+6	0	5
+in2_iout2_iout1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	51	o
+in2_iout2_iout1	50	o
+
+99	0	3
+in2_r	96	o
+out2_iout2	89	o
+out2	89	o
+
+122	0	6
+out2_r	24	o
+out1_iout1_iin1_iout1	31	o
+in2_r	8	o
+out1_iout1	31	o
+out1	44	o
+out1_iout1_iin1_iin1_iout1	9	o
+
+65	0	6
+out2_r	67	o
+out2_iout1_iout1	0	o
+in2_r	68	o
+out2_iout1_iout1_iin1_iout1	0	o
+out2_iout1_iout1_iin1_iin1_iout1	51	o
+out2_iout1	50	o
+
+85	1	3
+out1	86	o
+in2	87	o
+out2	88	o
+
+168	1	2
+out1	172	o
+in2	173	o
+
+172	0	5
+in1_iout1	74	o
+out1_iin1_iin1_iout1	3	o
+out1	53	o
+out1_iin1_iout1	53	o
+in1_r	2	o
+
+40	0	4
+out1_r	34	o
+in2_r	20	o
+in2_iout2	12	o
+in2_iout2_iout2	12	o
+
+8	1	2
+in1	18	o
+out2	19	o
+
+74	1	3
+in1	75	o
+out1	76	o
+in2	77	o
+
+84	1	3
+out1	118	o
+in2	119	o
+out2	120	o
+
+94	0	4
+out1_r	95	o
+in2_r	96	o
+in2_iout2	89	o
+in2_iout2_iout2	89	o
+
+158	0	5
+out2_iout1_iin1	89	o
+out2_r	89	o
+out2_iout1_iout1_iin1	95	o
+in2_r	96	o
+out2_iout1_iout1_iin1_iin1	91	o
+
+17	0	4
+out1_r	9	o
+in2	8	o
+in2_iin2	8	o
+in2_iout2_iin2	8	o
+
+9	1	2
+in1	10	o
+out2	11	o
+
+109	0	3
+in1_iin1_iin2_iout2_iout2	89	o
+in1_iin1_iin2_iout2	89	o
+in1_r	95	o
+
+149	0	5
+in1_iout1	51	o
+out1	0	o
+in1_iin2_iout2_iout1_iout1	0	o
+in1_iin2_iout2_iout1	50	o
+in1_r	61	o
+
+163	0	4
+out1_r	85	o
+in2	84	o
+in2_iin2	84	o
+in2_iout2_iin2	84	o
+
+72	0	5
+out1_iout1_iin1_iin1_iin2	8	o
+out1_r	44	o
+out2_r	24	o
+in2	8	o
+in2_iin2	8	o
+
+111	0	5
+out1_r	113	o
+in1_iin2_iin2	84	o
+in1_iin2_iout2_iin2	84	o
+in1_iin2	84	o
+in1_r	114	o
+
+21	0	5
+out2_iout1_iin1	79	o
+out2_r	79	o
+out2_iout1_iout1_iin1	78	o
+in2_r	169	o
+out2_iout1_iout1_iin1_iin1	80	o
+
+63	1	3
+in1	64	o
+out1	65	o
+in2	66	o
+
+154	0	6
+out2_r	67	o
+out1_iout1_iin1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	50	o
+out1_iout1_iin1_iin1_iout1	51	o
+
+2	1	3
+in1	70	o
+out1	71	o
+in2	72	o
+
+24	1	2
+in1	25	o
+out2	26	o
+
+76	0	5
+in1_iout1	50	o
+out1_iin1_iin1_iout1	51	o
+out1	0	o
+out1_iin1_iout1	0	o
+in1_r	67	o
+
+3	1	3
+in1	58	o
+out1	59	o
+in2	60	o
+
+145	0	5
+in1_iout1	50	o
+out1_iin1_iin1_iout1	51	o
+out1	0	o
+out1_iin1_iout1	0	o
+in1_r	67	o
+
+129	0	5
+in1_iin1_iin2_iout2_iout1	44	o
+in1_iout1	31	o
+in1_iin1_iin2_iout2_iout1_iout1	31	o
+in1_iin1_iout1	9	o
+in1_r	9	o
+
+42	0	6
+out2_r	67	o
+out1_iout1_iin1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	50	o
+out1_iout1_iin1_iin1_iout1	51	o
+
+81	1	2
+out1	82	o
+in2	83	o
+
+29	0	5
+in1_iout1	50	o
+out1_iin1_iin1_iout1	51	o
+out1	0	o
+out1_iin1_iout1	0	o
+in1_r	67	o
+
+104	0	5
+in1_iout1	133	o
+out1_iin1_iin1_iout1	132	o
+out1	134	o
+out1_iin1_iout1	134	o
+in1_r	152	o
+
+127	0	5
+out1_r	113	o
+out1_iin1_iin1_iin2	84	o
+in1_iin2_iin2	84	o
+in1_iin2	84	o
+in1_r	121	o
+
+118	0	6
+out2_r	24	o
+out2_iout1_iout1	31	o
+in2_r	8	o
+out2_iout1_iout1_iin1_iout1	31	o
+out2_iout1	44	o
+out2_iout1_iout1_iin1_iin1_iout1	9	o
+
+43	0	5
+out1_iout1_iin1_iin1_iin2	8	o
+out1_r	44	o
+out2_r	24	o
+in2	8	o
+in2_iin2	8	o
+
+5	0	5
+out1_r	78	o
+in2_r	169	o
+out1_iin1	80	o
+in2_iout2_iout1_iin1	79	o
+out1_iout1_iin1	78	o
+
+36	0	5
+in1_iout1	51	o
+out1	0	o
+in1_iin2_iout2_iout1_iout1	0	o
+in1_iin2_iout2_iout1	50	o
+in1_r	61	o
+
+92	0	5
+in2_iout2_iout1_iout1	134	o
+in2_r	157	o
+out1_iout1	134	o
+out1	132	o
+in2_iout2_iout1	133	o
+
+70	0	6
+out1_r	168	o
+out2_r	79	o
+in2_r	169	o
+out1_iin1	79	o
+out1_iout1_iin1_iin1	80	o
+out1_iout1_iin1	78	o
+
+55	0	5
+in1_iin1_iin2_iout2_iout1	50	o
+in1_iout1	0	o
+in1_iin1_iin2_iout2_iout1_iout1	0	o
+in1_iin1_iout1	51	o
+in1_r	51	o
+
+82	0	5
+in1_iin1_iin2_iout2_iout1	74	o
+in1_iout1	53	o
+in1_iin1_iin2_iout2_iout1_iout1	53	o
+in1_iin1_iout1	3	o
+in1_r	3	o
+
+57	0	4
+in1	2	o
+out1_r	53	o
+out1_iin1	3	o
+out1_iin1_iin1	4	o
+
+69	0	5
+out2_iout1_iin1	2	o
+out2_r	2	o
+out2_iout1_iout1_iin1	3	o
+in2_r	63	o
+out2_iout1_iout1_iin1_iin1	4	o
+
+108	0	4
+in1_iin1_iin2_iin2	84	o
+in1_iin1_iin2_iout2_iin2	84	o
+in1_iin1_iin2	84	o
+in1_r	85	o
+
+52	0	4
+in1	4	o
+out1_r	53	o
+out1_iin1	3	o
+in1_iin2_iout2_iout1_iin1	2	o
+
+23	0	4
+out2_r	24	o
+out2_iin2	8	o
+in2	8	o
+out2_iout1_iout1_iin1_iin1_iin2	8	o
+
+120	0	3
+in2_r	96	o
+out2_iout2	89	o
+out2	89	o
+
+112	0	4
+out1_r	90	o
+in1_iin2_iout2	89	o
+in1_r	91	o
+in1_iin2_iout2_iout2	89	o
+
+171	0	4
+out2_r	121	o
+out2_iin2	84	o
+in2	84	o
+out2_iout1_iout1_iin1_iin1_iin2	84	o
+
+12	1	3
+in1	41	o
+out1	42	o
+in2	43	o
+
+20	1	3
+in1	21	o
+out1	22	o
+in2	23	o
+
+86	0	5
+in1_iout1	9	o
+out1	31	o
+in1_iin2_iout2_iout1_iout1	31	o
+in1_iin2_iout2_iout1	44	o
+in1_r	38	o
+
+134	1	4
+in1	140	o
+out1	141	o
+in2	142	o
+out2	143	o
+
+28	0	4
+in1	79	o
+out1_r	81	o
+out1_iin1	78	o
+out1_iin1_iin1	80	o
+
+117	0	4
+out1_r	95	o
+in2_r	96	o
+in2_iout2	89	o
+in2_iout2_iout2	89	o
+
+41	0	6
+out1_r	168	o
+out2_r	79	o
+in2_r	169	o
+out1_iin1	79	o
+out1_iout1_iin1_iin1	80	o
+out1_iout1_iin1	78	o
+
+61	1	1
+in1	62	o
+
+93	0	4
+out1_r	85	o
+in2	84	o
+in2_iin2	84	o
+in2_iout2_iin2	84	o
+
+7	0	4
+out1_r	9	o
+in2	8	o
+in2_iin2	8	o
+in2_iout2_iin2	8	o
+
+103	1	3
+out1	104	o
+in2	105	o
+out2	106	o
+
+173	0	5
+out1_r	113	o
+out1_iin1_iin1_iin2	84	o
+in1_iin2_iin2	84	o
+in1_iin2	84	o
+in1_r	121	o
+
+71	0	6
+out2_r	67	o
+out1_iout1_iin1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	50	o
+out1_iout1_iin1_iin1_iout1	51	o
+
+96	1	3
+out1	97	o
+in2	98	o
+out2	99	o
+
+59	0	5
+in1_iout1	51	o
+out1	0	o
+in1_iin2_iout2_iout1_iout1	0	o
+in1_iin2_iout2_iout1	50	o
+in1_r	61	o
+
+110	0	5
+in1_iout1	132	o
+out1	134	o
+in1_iin2_iout2_iout1_iout1	134	o
+in1_iin2_iout2_iout1	133	o
+in1_r	135	o
+
+138	0	4
+out1_r	9	o
+in2	8	o
+in2_iin2	8	o
+in2_iout2_iin2	8	o
+
+45	0	4
+in1	121	o
+out1_r	113	o
+out1_iin1	85	o
+out1_iin1_iin1	114	o
+
+167	0	5
+out1_r	113	o
+in1_iin2_iin2	84	o
+in1_iin2_iout2_iin2	84	o
+in1_iin2	84	o
+in1_r	114	o
+
+14	1	3
+in1	15	o
+out1	16	o
+in2	17	o
+
+95	1	3
+out1	110	o
+in2	111	o
+out2	112	o
+
+119	0	4
+out2_r	121	o
+out2_iin2	84	o
+in2	84	o
+out2_iout1_iout1_iin1_iin1_iin2	84	o
+
+60	0	5
+out1_r	31	o
+in1_iin2_iin2	8	o
+in1_iin2_iout2_iin2	8	o
+in1_iin2	8	o
+in1_r	38	o
+
+67	1	1
+in1	73	o
+
+88	0	4
+out1_r	90	o
+in1_iin2_iout2	89	o
+in1_r	91	o
+in1_iin2_iout2_iout2	89	o
+
+51	1	1
+in1	52	o
+
+56	0	4
+in1_iin1_iin2_iin2	8	o
+in1_iin1_iin2_iout2_iin2	8	o
+in1_iin1_iin2	8	o
+in1_r	9	o
+
+115	0	5
+in2_iout2_iout1_iout1	31	o
+in2_r	8	o
+out1_iout1	31	o
+out1	9	o
+in2_iout2_iout1	44	o
+
+97	0	6
+out2_r	152	o
+out2_iout1_iout1	134	o
+in2_r	157	o
+out2_iout1_iout1_iin1_iout1	134	o
+out2_iout1_iout1_iin1_iin1_iout1	132	o
+out2_iout1	133	o
+
+123	0	5
+out1_iout1_iin1_iin1_iin2	84	o
+out1_r	125	o
+out2_r	121	o
+in2	84	o
+in2_iin2	84	o
+
+124	0	4
+out1_r	103	o
+in2_r	96	o
+in2_iout2	89	o
+out2	89	o
+
+91	1	3
+out1	92	o
+in2	93	o
+out2	94	o
+
+26	0	4
+out1_r	27	o
+in2_r	20	o
+in2_iout2	12	o
+out2	12	o
+
+87	0	5
+out1_r	113	o
+in1_iin2_iin2	84	o
+in1_iin2_iout2_iin2	84	o
+in1_iin2	84	o
+in1_r	114	o
+
+113	1	3
+out1	129	o
+in2	130	o
+out2	131	o
+
+31	1	2
+in1	32	o
+out2	33	o
+
+53	1	3
+in1	54	o
+out1	55	o
+in2	56	o
+
+18	0	5
+out2_iout1_iin1	121	o
+out2_r	121	o
+out2_iout1_iout1_iin1	85	o
+in2_r	84	o
+out2_iout1_iout1_iin1_iin1	114	o
+
+105	0	5
+out1_r	113	o
+out1_iin1_iin1_iin2	84	o
+in1_iin2_iin2	84	o
+in1_iin2	84	o
+in1_r	121	o
+
+34	1	3
+in1	35	o
+out1	36	o
+in2	37	o
+
+136	0	5
+out1_r	95	o
+in2_r	96	o
+out1_iin1	91	o
+in2_iout2_iout1_iin1	89	o
+out1_iout1_iin1	95	o
+
+77	0	5
+out1_r	31	o
+out1_iin1_iin1_iin2	8	o
+in1_iin2_iin2	8	o
+in1_iin2	8	o
+in1_r	24	o
+
+89	1	3
+out1	100	o
+in2	101	o
+out2	102	o
+
+150	0	5
+out1_r	31	o
+in1_iin2_iin2	8	o
+in1_iin2_iout2_iin2	8	o
+in1_iin2	8	o
+in1_r	38	o
+
+58	0	4
+in1	80	o
+out1_r	81	o
+out1_iin1	78	o
+in1_iin2_iout2_iout1_iin1	79	o
+
+54	0	3
+in1	78	o
+in1_iin1	80	o
+in1_iin1_iin2_iout2_iout1_iin1	79	o
+
+142	0	4
+in1_iin1_iin2_iin2	8	o
+in1_iin1_iin2_iout2_iin2	8	o
+in1_iin1_iin2	8	o
+in1_r	9	o
+
+19	0	3
+in2_r	20	o
+out2	12	o
+out2_iout2	12	o
+
+10	0	4
+in1	114	o
+out1_r	113	o
+out1_iin1	85	o
+in1_iin2_iout2_iout1_iin1	121	o
+
+39	0	5
+out1_r	85	o
+in2_r	84	o
+out1_iin1	114	o
+in2_iout2_iout1_iin1	121	o
+out1_iout1_iin1	85	o
+
+35	0	4
+in1	80	o
+out1_r	81	o
+out1_iin1	78	o
+in1_iin2_iout2_iout1_iin1	79	o
+
+101	0	5
+out1_iout1_iin1_iin1_iin2	84	o
+out1_r	125	o
+out2_r	121	o
+in2	84	o
+in2_iin2	84	o
+
+47	0	3
+in1	78	o
+in1_iin1	80	o
+in1_iin1_iin2_iout2_iout1_iin1	79	o
+
+143	0	3
+in1_iin1_iin2_iout2_iout2	12	o
+in1_iin1_iin2_iout2	12	o
+in1_r	34	o
+
+75	0	4
+in1	79	o
+out1_r	81	o
+out1_iin1	78	o
+out1_iin1_iin1	80	o
+
+148	0	4
+in1	91	o
+out1_r	90	o
+out1_iin1	95	o
+in1_iin2_iout2_iout1_iin1	89	o
+
+169	1	2
+out1	170	o
+in2	171	o
+
+80	1	2
+out1	162	o
+in2	163	o
+
+30	0	5
+out1_r	31	o
+out1_iin1_iin1_iin2	8	o
+in1_iin2_iin2	8	o
+in1_iin2	8	o
+in1_r	24	o
+
+48	0	5
+in1_iin1_iin2_iout2_iout1	50	o
+in1_iout1	0	o
+in1_iin1_iin2_iout2_iout1_iout1	0	o
+in1_iin1_iout1	51	o
+in1_r	51	o
+
+68	1	1
+in1	69	o
+
+137	0	5
+in2_iout2_iout1_iout1	0	o
+in2_r	68	o
+out1_iout1	0	o
+out1	51	o
+in2_iout2_iout1	50	o

@@ -1,0 +1,10 @@
+StateIndex 	 StateName
+0	0
+1	1
+2	2
+5	3
+3	4
+7	5
+4	6
+6	7
+8	8

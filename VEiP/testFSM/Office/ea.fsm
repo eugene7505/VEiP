@@ -1,0 +1,71 @@
+16
+
+0	1	1
+in1/in1	7	c	o
+
+11	1	2
+out1/out1	7		c	o
+in2/in2	13		c	o
+
+12	1	4
+in1/in1	8		c	o
+out1/out1	0		c	o
+in2/in1	6		c	o
+out2/in1	5		c	o
+
+13	1	3
+out1/in2	15		c	o
+in2/in2	13		c	o
+out2/out2	8		c	o
+
+14	1	1
+in1/in2	3		c	o
+
+15	1	2
+in1/in2	13		c	o
+out2/out2	5		c	o
+
+1	1	1
+in1/in1	4		c	o
+
+2	1	2
+in1/in2	13		c	o
+out2/in2	9		c	o
+
+3	1	3
+in1/in2	10		c	o
+out1/in2	14		c	o
+in2/in2	15		c	o
+
+4	1	3
+in1/in2	10		c	o
+out1/out1	1		c	o
+in2/in2	15		c	o
+
+5	1	3
+in1/in2	10		c	o
+out1/out1	1		c	o
+in2/in2	15		c	o
+
+6	1	2
+in1/in2	13		c	o
+out2/out2	5		c	o
+
+7	1	3
+in1/in1	11		c	o
+out1/out1	0		c	o
+in2/in1	2		c	o
+
+8	1	3
+out1/out1	12		c	o
+in2/in2	13		c	o
+out2/out2	8		c	o
+
+9	1	3
+in1/in2	10		c	o
+out1/in2	14		c	o
+in2/in2	15		c	o
+
+10	1	2
+out1/in2	3		c	o
+in2/in2	13		c	o

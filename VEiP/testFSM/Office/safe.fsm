@@ -1,0 +1,55 @@
+6	1
+
+3	1	4
+in1	6	o
+ep	3	o
+in1_i	6	o
+in1_r	6	o
+
+0	1	10
+out1_r	1	o
+out2_r	0	o
+ep	0	o
+in2_r	2	o
+in2_i	2	o
+out2_i	0	o
+out1	1	o
+out1_i	1	o
+in2	2	o
+out2	0	o
+
+1	1	7
+in1	0	o
+out1_r	3	o
+ep	1	o
+out1	3	o
+out1_i	3	o
+in1_i	0	o
+in1_r	0	o
+
+6	1	7
+in1	7	o
+out1_r	3	o
+ep	6	o
+out1	3	o
+out1_i	3	o
+in1_i	7	o
+in1_r	7	o
+
+7	1	7
+out1_r	6	o
+ep	7	o
+in2_r	2	o
+in2_i	2	o
+out1	6	o
+out1_i	6	o
+in2	2	o
+
+2	1	7
+out2_r	0	o
+ep	2	o
+in2_r	2	o
+in2_i	2	o
+out2_i	0	o
+in2	2	o
+out2	0	o
