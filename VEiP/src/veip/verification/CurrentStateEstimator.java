@@ -1,5 +1,7 @@
 package veip.verification;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -288,7 +290,81 @@ public class CurrentStateEstimator {
 		}
 	}
 
+	public void exportEstimator(String outFileName, boolean renumberStates)
+			throws FileNotFoundException {
+		PrintWriter fileWriter = new PrintWriter(outFileName);
+		fileWriter.println(numberOfStates + "\t" + "1"); // #initial = 1
+		fileWriter.println();
+		EstimatorState initial = initialEstimate;
+		fileWriter.println(initial.getName() + "\t"
+				+ ((initial.isOpaque()) ? 1 : 0) + "\t"
+				+ initial.getNumberOfTransitions());
+		for (Map.Entry<Event, ArrayList<State>> transitionEntry : initial
+				.getAllTransitions().entrySet()) {
+			Event event = transitionEntry.getKey();
+			ArrayList<State> nextEstimateList = transitionEntry.getValue();
+			if (nextEstimateList.size() != 1)
+				fileWriter
+						.println("the estimator is not deterministic. Wrong!");
+			else {
+				fileWriter.println(event.getName() + "\t"
+						+ nextEstimateList.get(0).getName() + "\t"
+						+ ((event.isObservable()) ? "o" : "uo"));
+			}
+		}
+		for (Map.Entry<String, EstimatorState> entry : estimatorStateMap
+				.entrySet()) {
+			EstimatorState estimate = entry.getValue();
+			if (((State) estimate).isInitial())
+				continue;
+			fileWriter.println();
+			fileWriter.println(estimate.getName() + "\t"
+					+ ((estimate.isOpaque()) ? 1 : 0) + "\t"
+					+ estimate.getNumberOfTransitions());
+			for (Map.Entry<Event, ArrayList<State>> transitionEntry : estimate
+					.getAllTransitions().entrySet()) {
+				Event event = transitionEntry.getKey();
+				ArrayList<State> nextEstimateList = transitionEntry.getValue();
+				if (nextEstimateList.size() != 1)
+					fileWriter
+							.println("the estimator is not deterministic. Wrong!");
+				else {
+					fileWriter.println(event.getName() + "\t"
+							+ nextEstimateList.get(0).getName() + "\t"
+							+ ((event.isObservable()) ? "o" : "uo"));
+				}
+			}
+		}
+		fileWriter.close();
+	}
+
 	public boolean isInitialStateSafe() {
 		return initialEstimate.isNonsecret();
 	}
+	
+	public void exportUtility(String utilityFile) throws FileNotFoundException{
+		PrintWriter fileWriter = new PrintWriter(utilityFile);
+		fileWriter.println("states " + numberOfStates); // #initial = 1
+		for (Map.Entry<String, EstimatorState> entry: estimatorStateMap.entrySet())
+			fileWriter.print(entry.getValue().getName() + " ");
+		fileWriter.println();
+		fileWriter.println();
+		for (int i = 0; i < numberOfStates; i++){
+			String s = "";
+			for (int j = 0; j < numberOfStates; j++)
+				s += "0 ";
+			fileWriter.println(s);
+		}
+		fileWriter.close();
+	}
+	
+
+	public static void main(String[] args) throws FileNotFoundException {
+		String fsmFile = "/Users/yi-chinwu/git/VEiP/VEiP/testFSM/importantGuest/office.fsm";
+		FSM fsm = new FSM(fsmFile);
+		CurrentStateEstimator cse = new CurrentStateEstimator(fsm);
+		cse.exportEstimator("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/importantGuest/obs.fsm", false);
+		cse.exportUtility("/Users/yi-chinwu/git/VEiP/VEiP/testFSM/importantGuest/utility.txt");
+	}
+
 }

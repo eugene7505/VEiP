@@ -422,6 +422,9 @@ public class FSM {
 	public void exportFSM(String outFileName, boolean renumberStates)
 			throws FileNotFoundException {
 		PrintWriter fileWriter = new PrintWriter(outFileName);
+		int pos = outFileName.indexOf(".fsm");
+		String mappingFileName = outFileName.substring(0, pos) + "-mapping.txt";
+		exportStateIndexMapping(mappingFileName);
 		fileWriter.println(numberOfStates + "\t" + numberOfInitialState);
 		for (int i = 0; i < numberOfInitialState; i++) {
 			State state = initialStateList.get(i);

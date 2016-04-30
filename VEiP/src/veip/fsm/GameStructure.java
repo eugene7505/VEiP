@@ -1,10 +1,13 @@
 package veip.fsm;
 
 import java.awt.event.InputEvent;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.ejml.simple.SimpleMatrix;
 
@@ -16,7 +19,8 @@ public class GameStructure extends FSM {
 		weightMatrixMap = new HashMap<Event, SimpleMatrix>();
 		stateValueVector = new SimpleMatrix();
 		stateList = new ArrayList<State>();
-		// eventSet is the event set to the edit function (i.e., the set of system's output event)
+		// eventSet is the event set to the edit function (i.e., the set of
+		// system's output event)
 		eventSet = new HashSet<Event>();
 	}
 
@@ -25,10 +29,10 @@ public class GameStructure extends FSM {
 			eventSet.add(entry.getValue());
 	}
 
-	public HashSet<Event> getEventSet(){
+	public HashSet<Event> getEventSet() {
 		return eventSet;
 	}
-	
+
 	public void constructYtoZWeightMatrixMap(
 			HashMap<Event, HashMap<StatePair, Double>> ytoZMatrix) {
 		// System.out.println("YtoZWeightMatrixMap");
@@ -50,12 +54,20 @@ public class GameStructure extends FSM {
 	public void constructZtoYWeightMatrixMap(
 			HashMap<Event, HashMap<StatePair, Double>> ztoYMatrix) {
 		// System.out.println("ZtoYWeightMatrixMap");
+		// int i = 0;
 		for (Map.Entry<Event, HashMap<StatePair, Double>> mapEntry : ztoYMatrix
 				.entrySet()) {
 			Event event = mapEntry.getKey();
-			// System.out.println(event.name);
-			weightMatrixMap.put(event, new SimpleMatrix(numberOfStates,
-					numberOfStates));
+			/*
+			 * System.out.println(i + ":" + event.name); if (i == 20){ double
+			 * currentMemory = ((double) ((double) (Runtime.getRuntime()
+			 * .totalMemory() / 1024) / 1024)) - ((double) ((double)
+			 * (Runtime.getRuntime().freeMemory() / 1024) / 1024));
+			 * System.out.println("Memory usage " + currentMemory + " MB"); }
+			 */
+			SimpleMatrix ematrix = new SimpleMatrix(numberOfStates,
+					numberOfStates);
+			weightMatrixMap.put(event, ematrix);
 			for (Map.Entry<StatePair, Double> matrixEntry : mapEntry.getValue()
 					.entrySet()) {
 				StatePair pair = matrixEntry.getKey();
@@ -66,6 +78,7 @@ public class GameStructure extends FSM {
 				 * System.out.println(matrixEntry.getValue());
 				 */
 			}
+			// i++;
 		}
 	}
 
@@ -112,6 +125,15 @@ public class GameStructure extends FSM {
 			updateNumberOfStates();
 		}
 		return state;
+	}
+
+	public double getMaxWeight() {
+		int Wmax = 0;
+		for (Map.Entry<Event, SimpleMatrix> mapEntry : weightMatrixMap
+				.entrySet())
+			Wmax = (Wmax > (int) mapEntry.getValue().elementMaxAbs()) ? Wmax
+					: (int) mapEntry.getValue().elementMaxAbs();
+		return Wmax;
 	}
 
 	public void setOptimalAction(ArrayList<Event> actions) {
@@ -177,6 +199,15 @@ public class GameStructure extends FSM {
 		return stateList.get(i);
 	}
 
+	public int getEditCost(Event e) {
+		return (int) editCostMap.get(e);
+	}
+
+	public void setEditCost(Event e, int cost) {
+		editCostMap.put(e, new Integer(cost));
+	}
+
+	private HashMap<Event, Integer> editCostMap = new HashMap<Event, Integer>();
 	private HashMap<Event, SimpleMatrix> weightMatrixMap;
 	private SimpleMatrix stateValueVector;
 	private ArrayList<Event> optimalActoins;

@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
+
 import org.ejml.simple.SimpleMatrix;
+
 import veip.fsm.Event;
 import veip.fsm.GameStructure;
+import veip.fsm.MealyAutomaton;
 import veip.fsm.State;
 
 public final class QuantitativeSynthesisUtilities {
 
 	private QuantitativeSynthesisUtilities() {
 	}
-
 	/*
 	 * TODO: original algorithm is too slow, need "early termination" private
 	 * function that performs value iteration for Mean Payoff Game, in this
@@ -23,19 +25,11 @@ public final class QuantitativeSynthesisUtilities {
 	public static void valueIterationMPG(GameStructure gameGraph) {
 		game = gameGraph;
 		n = game.getNumberOfStates();
-		computeMaxWeight();
-		computeOptimalMeanCost();
+		Wmax = (int)game.getMaxWeight();
 		game.initializeOptimalActions();
 		synthesizeOptimalMPGStrategy();
 	}
-
-	private static void computeMaxWeight() {
-		for (Map.Entry<Event, SimpleMatrix> mapEntry : game.getMatrixMap()
-				.entrySet())
-			Wmax = (Wmax > (int) mapEntry.getValue().elementMaxAbs()) ? Wmax
-					: (int) mapEntry.getValue().elementMaxAbs();
-	}
-
+	
 	private static SimpleMatrix valueIteration(int horizon,
 			SimpleMatrix weightMatrix) {
 		SimpleMatrix newValueVector = new SimpleMatrix(1, n);
@@ -91,6 +85,7 @@ public final class QuantitativeSynthesisUtilities {
 		SimpleMatrix weightMatrix = new SimpleMatrix(n, n);
 		for (Map.Entry<String, Event> eventEntry : game.getLocalEventMap()
 				.entrySet())
+			//TODO this should not be plus, two output pattern can go to the same next y state
 			weightMatrix = weightMatrix.plus(game.getMatrix(eventEntry
 					.getValue()));
 		SimpleMatrix hTotalCost = valueIteration(h, weightMatrix);
