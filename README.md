@@ -1,9 +1,7 @@
 # VEiP - Verification and Enforcement using Insertion for oPacity
 
 
-
-
-##Introduction
+## Introduction
 VEiP is a Java based toolbox for verification and enforcement of opacity properties formulated in Discrete Event Systems. While some features are still under development, VEiP can be downloaded for features that are already implemented. The full version of VEiP expects to provide the following functionality:
 
 Logical models:
@@ -15,9 +13,10 @@ Stochastic models:
 * Computation of the level of opacity
 * Synthesis of an optimal insertion function that maximizes opacity level 
 
-VEiP is distributed under BSD 3-Clause license. As of Dec. 2016, this repository is no longer updated. The current version of VEiP can be found at https://gitlab.eecs.umich.edu/M-DES-tools.
 
-##Access, Modify, Build 
+VEiP was developed by Yi-Chin Wu while she was a postdoc with the University of Michigan, Ann Arbor, and the University of California, Berkeley. It is distributed under BSD 3-Clause license. As of Dec. 2016, this repository is no longer updated. The current version of VEiP can be found at https://gitlab.eecs.umich.edu/M-DES-tools.
+
+## Access, Modify, Build
 To access, modify, build, and use the code, follow the instructions below:
 
 1) Install git if it is not already installed. 
@@ -36,7 +35,7 @@ $ javac -d ./bin/ -cp src/ src/veip/synthesis/SynthesisMain.java  <br />
 5) If the compile is successful, all byte-codes should have been written to bin/. <br />
 $ cd ./bin
 
-##Instruction
+## Instruction
 1) Verification. EXAMPLE: 
 * Verify logical opacity: 
 $ java veip.verification.VerificationMain -f ../testFSM/test1/G.fsm
@@ -49,7 +48,7 @@ $ java veip.synthesis.SynthesisMain -g ../testFSM/test2/G.fsm ../testFSM/test2/I
 * Synthesis an insertion function maximizing the opacity level: 
 $ java veip.verification.VerificationMain -s ../testFSM/acc2015RunningExample/H.pfa ../testFSM/acc2015RunningExample/IA.fsm 
 
-## Automata File Formats:
+## Automata File Formats
 Two models are considered: 
 
 1) Finite-State Automata (FSA)
@@ -77,3 +76,10 @@ b	state0	o  0.3
 
 state1	0	 1  0.5 <br />
 b	state0	o  1 <br />
+
+
+## Contact Us
+Questions? Send email to ycwu[at]umich[dot]edu
+
+## Acknowledgments
+This work was supported in part by the NSF Expeditions in Computing project ExCAPE: Expeditions in Computer Augmented Program Engineering (grant CCF-1138860), and in part by the TerraSwarm Research Center, one of six centers supported by the STARnet phase of the Focus Cen- ter Research Program (FCRP) a Semiconductor Research Corporation program sponsored by MARCO and DARPA.
