@@ -15,7 +15,7 @@ Stochastic models:
 * Computation of the level of opacity
 * Synthesis of an optimal insertion function that maximizes opacity level 
 
-VEiP is distributed under BSD 3-Clause license. This repository is no longer updated. The current version of VEiP can be found at https://gitlab.eecs.umich.edu/M-DES-tools.
+VEiP is distributed under BSD 3-Clause license. As of Dec. 2016, this repository is no longer updated. The current version of VEiP can be found at https://gitlab.eecs.umich.edu/M-DES-tools.
 
 ##Access, Modify, Build 
 To access, modify, build, and use the code, follow the instructions below:
